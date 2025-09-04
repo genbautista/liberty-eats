@@ -30,3 +30,11 @@ DB_NAME=libertiesguide
 # Documentation on xdevapi MySQL connector:
 
 https://dev.mysql.com/doc/dev/connector-nodejs/latest/tutorial-Connecting_to_a_Server.html
+
+# Running the server
+
+Start the backend with this command:
+
+```
+node server.js
+```
