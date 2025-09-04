@@ -7,11 +7,13 @@ https://dev.mysql.com/doc/mysql-getting-started/en/
 Then, run these commands in the backend directory:
 
 ```npm install @mysql/xdevapi
-mysql -h localhost -u root -p```
+mysql -h localhost -u root -p
+```
 
 Login with the password created during MySQL installation. Then run:
 
-```CREATE DATABASE libertyeats;```
+```CREATE DATABASE libertyeats;
+```
 
 Once that's done, create a file called ".env" in the backend directory, and give it the following contents (remember to supply the password field!):
 
@@ -19,7 +21,8 @@ Once that's done, create a file called ".env" in the backend directory, and give
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
-DB_NAME=libertiesguide```
+DB_NAME=libertiesguide
+```
 
 #Documentation on xdevapi MySQL connector:
 
