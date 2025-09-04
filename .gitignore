@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environmental Variables--usually contain passwords and should not be shared
+*.env
