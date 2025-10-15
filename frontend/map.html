@@ -1,376 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LibertiesShops Map</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="https://www.citypng.com/public/uploads/preview/cartoon-white-black-sheep-701751694953014c9syix3tze.png" />
+<link rel="Stylesheet" href="style.css"/>
+<title>LibertiesShops Map</title>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-    <header>
-        <div style="width: 100%; height: 100%; position: relative; background: white; overflow: hidden">
-        <img style="width: 1723px; height: 1940px; left: 109px; top: -24px; position: absolute" src="./src/assets/Map_icon.png"/>
-        <div style="width: 473px; height: 1505px; padding-top: 11px; padding-bottom: 10px; padding-left: 16px; padding-right: 16px; left: 2px; top: 72px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-            <div data-mode="Light" style="width: 473px; height: 1505px; left: 0px; top: 0px; position: absolute">
-                <div style="width: 525px; height: 1557px; left: -26px; top: -26px; position: absolute">
-                    <div style="width: 625px; height: 1657px; left: -50px; top: -50px; position: absolute; background: white">
-                        <div style="width: 473px; height: 1505px; left: 76px; top: 76px; position: absolute; background: black; border-radius: 20px"></div>
-                    </div>
-                    <div style="width: 473px; height: 1505px; left: 26px; top: 31px; position: absolute; background: rgba(0, 0, 0, 0.08); background-blend-mode: hard_light; box-shadow: 40px 40px 40px; border-radius: 20px; filter: blur(20px); backdrop-filter: blur(40px)"></div>
-                </div>
-                <div style="width: 473px; height: 1505px; left: 0px; top: 0px; position: absolute; background: linear-gradient(0deg, rgba(250, 250, 250, 0.70) 0%, rgba(250, 250, 250, 0.70) 100%), #0F0F0F; background-blend-mode: normal, color_dodge; box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15); border-radius: 20px"></div>
-                <div style="width: 473px; height: 1505px; left: 0px; top: 0px; position: absolute; background: rgba(0, 0, 0, 0); border-radius: 20px"></div>
-            </div>
-    </header>
-        <div data-show-button-1="true" data-show-button-2="false" data-show-edit="true" data-show-sidebar-button="true" style="align-self: stretch; padding-bottom: 20px; justify-content: center; align-items: flex-start; gap: 2px; display: inline-flex">
-            <div style="flex: 1 1 0; padding-top: 1px; justify-content: flex-start; align-items: center; gap: 12px; display: flex">
-                <div data-mode="Light" style="justify-content: center; align-items: center; display: flex">
-                    <div style="color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Filters & Results</div>
-                </div>
-            </div>
-            <div style="height: 22px; justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-                <div data-mode="Light" style="justify-content: center; align-items: center; display: flex"></div>
-                <div data-mode="Light" style="justify-content: center; align-items: center; display: flex">
-                    <div style="width: 28px; height: 22px; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 510; word-wrap: break-word">􀏚</div>
-                </div>
-            </div>
+    <nav>
+        <a href="./placeholder.html">
+             <div class="navbar-item" style="width: 3.868rem; height: 2.067rem; right: 3.125rem; position: absolute; top: 0.9rem; display: flex; align-items: center; justify-content: center; color: black; font-size: 1.25rem; font-family: Inter; font-style: italic; font-weight: 800; text-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)">Login</div>
+        </a>
+        <a href="./placeholder.html">
+            <div class="navbar-item" style="width: 5.307rem; height: 1.567rem; right: 8.125rem; position: absolute; top: 1.15rem; display: flex; align-items: center; justify-content: center; color: black; font-size: 1.25rem; font-family: Inter; font-style: italic; font-weight: 800; text-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)">Settings</div>
+        </a>
+        <a href="./map.html">
+            <img class="navbar-item" style="width: 3rem; height: 3rem; right: 13.5rem; position: absolute; top: 0.5rem;" src="./src/assets/Map_icon.png" />
+        </a>
+        <a href="./index.html">
+            <div class="navbar-item" style="width: 25.454rem; height: 2.769rem; left: 3.125rem; position: absolute; top: 0.6rem; display: flex; align-items: center; color: black; font-size: 3.125rem; font-family: Inter; font-style: italic; font-weight: 800; text-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)">Liberties Shops</div>
+        </a>
+    </nav>
+
+    <!-- Dropdown toggle button for advanced filters -->
+    <button id="toggle-filters-btn" class="toggle-filters-btn">
+        <span>⚙️ Filters</span>
+    </button>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <div class="filters-sidebar">
+        <div class="filters-header">
+            <h2 class="filters-title">Filters & Results</h2>
+            <button class="filters-edit-btn">⋯</button>
         </div>
-        <div style="align-self: stretch; border-radius: 100px; justify-content: flex-start; align-items: center; display: inline-flex">
-            <div data-mode="Light" data-state="Placeholder" style="flex: 1 1 0; padding: 11px; background: var(--Fills-Secondary, rgba(120, 120, 128, 0.16)); border-radius: 100px; justify-content: flex-start; align-items: center; display: flex">
-                <div style="flex: 1 1 0; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="color: var(--Labels---Vibrant-Secondary, #999999); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">􀊫</div>
-                    <div style="color: var(--Labels---Vibrant-Secondary, #999999); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Search</div>
-                </div>
-                <div style="color: var(--Labels---Vibrant-Secondary, #999999); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">􀊱</div>
-            </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="🔍 Search">
         </div>
-        <div style="align-self: stretch; padding-top: 20px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="width: 288px; height: 44px; padding-top: 2px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div data-mode="Light" data-show-detail="true" data-show-disclosure="true" style="flex: 1 1 0; justify-content: flex-start; align-items: center; display: flex">
-                    <div style="flex: 1 1 0; height: 22px; color: var(--Labels-Secondary, rgba(60, 60, 67, 0.60)); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Inventory Type</div>
-                    <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                        <div style="text-align: right; color: var(--Labels-Secondary, rgba(60, 60, 67, 0.60)); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Detail</div>
-                        <div data-open="True" style="width: 18px; height: 18px; position: relative">
-                            <div style="width: 18px; height: 18px; left: 0px; top: 2px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">􀆈</div>
-                        </div>
+
+        <section class="filter-section">
+            <h3 class="section-header">Inventory Type</h3>
+            
+            <button class="filter-item">
+                <span class="filter-icon">🍎</span>
+                <span class="filter-label">Fruit & Veg</span>
+                <span class="filter-detail">Expand</span>
+            </button>
+
+            <button class="filter-item filter-item-selected">
+                <span class="filter-icon">🥩</span>
+                <span class="filter-label">Butcher</span>
+                <span class="filter-detail">Expand ›</span>
+            </button>
+
+            <button class="filter-item filter-item-nested">
+                <span class="filter-icon">🍗</span>
+                <span class="filter-label">Chicken</span>
+            </button>
+
+            <button class="filter-item">
+                <span class="filter-icon">👕</span>
+                <span class="filter-label">Clothing</span>
+            </button>
+        </section>
+
+        <section class="filter-section">
+            <h3 class="section-header">Distance</h3>
+            
+            <button class="filter-item">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">2km</span>
+            </button>
+
+            <button class="filter-item">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">5km</span>
+            </button>
+        </section>
+
+        <!-- Results section with shop cards -->
+        <div class="results-section">
+            <h3 class="results-header">Results (3)</h3>
+            
+            <div class="shop-card">
+                <img class="shop-image" src="https://placehold.co/401x247" alt="Shop image">
+                <div class="shop-content">
+                    <div class="shop-info">
+                        <h3 class="shop-name">Meath St. Butchers</h3>
+                        <p class="shop-price">€2.65</p>
+                    </div>
+                    <div class="shop-info">
+                        <p><b>1.2 KM away</b></p>
+                        <p><b>12:00 - 18:15</b></p>
                     </div>
                 </div>
             </div>
-            <div data-indent-level="0" data-show-image="true" data-show-trailing="true" data-state="Default" style="align-self: stretch; height: 44px; padding-left: 10px; padding-right: 8px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Default" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">􀓔</div>
-                        <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                            <div style="color: var(--Labels-Primary, black); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Fruit & Veg</div>
-                        </div>
+
+            <div class="shop-card">
+                <img class="shop-image" src="https://placehold.co/401x247" alt="Shop image">
+                <div class="shop-content">
+                    <div class="shop-info">
+                        <h3 class="shop-name">Thomas Street Market</h3>
+                        <p class="shop-price">€3.50</p>
                     </div>
-                </div>
-                <div data-mode="Light" data-show-detail="true" data-state="Default" data-type="Detail" style="height: 44px; padding-right: 8px; justify-content: flex-end; align-items: center; gap: 8px; display: flex">
-                    <div style="text-align: right; color: var(--Labels---Vibrant-Secondary, #999999); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Expand</div>
-                </div>
-            </div>
-            <div data-indent-level="0" data-show-image="true" data-show-trailing="true" data-state="Disclosable" style="align-self: stretch; height: 44px; padding-left: 10px; padding-right: 8px; border-radius: 100px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Selected" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Colors-Blue, #0088FF); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">􀓔</div>
-                        <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                            <div style="color: var(--Colors-Blue, #0088FF); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">Butcher</div>
-                        </div>
-                    </div>
-                </div>
-                <div data-mode="Light" data-show-detail="true" data-state="Default" data-type="Disclosure" style="height: 44px; padding-right: 4px; justify-content: flex-end; align-items: center; gap: 4px; display: flex">
-                    <div style="text-align: right; color: var(--Labels---Vibrant-Secondary, #999999); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Expand</div>
-                    <div data-open="True" style="width: 18px; height: 18px; position: relative">
-                        <div style="width: 18px; height: 18px; left: 0px; top: 2px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Secondary, #999999); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">􀆈</div>
+                    <div class="shop-info">
+                        <p><b>0.8 KM away</b></p>
+                        <p><b>09:00 - 17:00</b></p>
                     </div>
                 </div>
             </div>
-            <div data-indent-level="1" data-show-image="true" data-show-trailing="true" data-state="Disclosable" style="align-self: stretch; height: 44px; padding-left: 30px; padding-right: 8px; border-radius: 100px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Selected" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Colors-Blue, #0088FF); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">􀓔</div>
-                        <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                            <div style="color: var(--Colors-Blue, #0088FF); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">Chicken</div>
-                        </div>
+
+            <div class="shop-card">
+                <img class="shop-image" src="https://placehold.co/401x247" alt="Shop image">
+                <div class="shop-content">
+                    <div class="shop-info">
+                        <h3 class="shop-name">Francis Street Deli</h3>
+                        <p class="shop-price">€4.25</p>
                     </div>
-                </div>
-            </div>
-            <div data-indent-level="2" data-show-image="true" data-show-trailing="true" data-state="Default" style="align-self: stretch; height: 44px; padding-left: 50px; padding-right: 8px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Default" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column"></div>
-                        <div></div>
-                    </div>
-                </div>
-                <div data-mode="Light" data-show-detail="true" data-state="Default" data-type="Detail" style="height: 44px; padding-right: 8px; justify-content: flex-end; align-items: center; gap: 8px; display: flex"></div>
-            </div>
-            <div data-indent-level="0" data-show-image="true" data-show-trailing="true" data-state="Default" style="align-self: stretch; height: 44px; padding-left: 10px; padding-right: 8px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Default" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">􀓔</div>
-                        <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                            <div style="color: var(--Labels-Primary, black); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Clothing</div>
-                        </div>
-                    </div>
-                </div>
-                <div data-mode="Light" data-show-detail="true" data-state="Default" data-type="Detail" style="height: 44px; padding-right: 8px; justify-content: flex-end; align-items: center; gap: 8px; display: flex"></div>
-            </div>
-        </div>
-        <div style="align-self: stretch; padding-top: 20px; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-            <div style="align-self: stretch; height: 44px; padding-top: 2px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div data-mode="Light" data-show-detail="true" data-show-disclosure="true" style="flex: 1 1 0; justify-content: flex-start; align-items: center; display: flex">
-                    <div style="flex: 1 1 0; height: 22px; color: var(--Labels-Secondary, rgba(60, 60, 67, 0.60)); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">Distance</div>
-                    <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                        <div style="text-align: right"></div>
-                        <div data-open="True" style="width: 18px; height: 18px; position: relative">
-                            <div style="width: 18px; height: 18px; left: 0px; top: 2px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 590; line-height: 22px; word-wrap: break-word">􀆈</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div data-indent-level="0" data-show-image="true" data-show-trailing="true" data-state="Default" style="align-self: stretch; height: 44px; padding-left: 10px; padding-right: 8px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Default" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">􀓔</div>
-                        <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                            <div style="color: var(--Labels-Primary, black); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">2km</div>
-                        </div>
-                    </div>
-                </div>
-                <div data-mode="Light" data-show-detail="true" data-state="Default" data-type="Detail" style="height: 44px; padding-right: 8px; justify-content: flex-end; align-items: center; gap: 8px; display: flex"></div>
-            </div>
-            <div data-indent-level="0" data-show-image="true" data-show-trailing="true" data-state="Default" style="align-self: stretch; height: 44px; padding-left: 10px; padding-right: 8px; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                <div data-image="Symbol" data-mode="Light" data-show-edit-button="false" data-show-subtitle="false" data-state="Default" style="flex: 1 1 0; height: 44px; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 85px; align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: flex">
-                        <div style="width: 34px; align-self: stretch; text-align: center; justify-content: center; display: flex; flex-direction: column; color: var(--Labels---Vibrant-Primary, #333333); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">􀓔</div>
-                        <div style="flex-direction: column; justify-content: center; align-items: flex-start; display: inline-flex">
-                            <div style="color: var(--Labels-Primary, black); font-size: 17px; font-family: SF Pro; font-weight: 400; line-height: 22px; word-wrap: break-word">5km</div>
-                        </div>
-                    </div>
-                </div>
-                <div data-mode="Light" data-show-detail="true" data-state="Default" data-type="Detail" style="height: 44px; padding-right: 8px; justify-content: flex-end; align-items: center; gap: 8px; display: flex">
-                    <div style="text-align: right"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div data-show-description="false" style="width: 433px; height: 352px; min-width: 240px; padding: 16px; left: 22px; top: 853px; position: absolute; background: var(--Background-Default-Default, white); border-radius: 8px; outline: 1px var(--Border-Default-Default, #D9D9D9) solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: inline-flex">
-        <img style="align-self: stretch; height: 247px" src="https://placehold.co/401x247" />
-        <div style="width: 208px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-            <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 700; line-height: 22.40px; word-wrap: break-word">Meath St. Butchers</div>
-            </div>
-            <div style="justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 600; line-height: 22.40px; word-wrap: break-word">€2.65</div>
-            </div>
-        </div>
-    </div>
-    <div style="width: 208px; left: 227px; top: 1145px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-        <div style="align-self: stretch; justify-content: flex-end; align-items: flex-start; display: inline-flex">
-            <div style="text-align: right; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 700; line-height: 22.40px; word-wrap: break-word">1.2 Km Away</div>
-        </div>
-        <div style="align-self: stretch; justify-content: flex-end; align-items: center; display: inline-flex">
-            <div style="text-align: right; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 600; line-height: 22.40px; word-wrap: break-word">8:00 - 17:30</div>
-        </div>
-        <div style="align-self: stretch; justify-content: flex-end; align-items: center; display: inline-flex">
-            <div style="text-align: right"></div>
-        </div>
-    </div>
-    <div style="width: 1440px; height: 72px; left: 0px; top: 0px; position: absolute; background: white; box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.10)"></div>
-    <div style="width: 61.89px; height: 33.07px; left: 1328px; top: 19.22px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: black; font-size: 20px; font-family: Inter; font-style: italic; font-weight: 800; line-height: 20px; word-wrap: break-word; text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)">Login</div>
-    <div style="width: 84.91px; height: 25.07px; left: 1193px; top: 23.30px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: black; font-size: 20px; font-family: Inter; font-style: italic; font-weight: 800; line-height: 20px; word-wrap: break-word; text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)">Settings</div>
-    <img style="width: 54px; height: 54px; left: 1089px; top: 9px; position: absolute; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)" src="https://placehold.co/54x54" />
-    <div style="width: 407.27px; height: 44.31px; left: 50px; top: 15.42px; position: absolute; justify-content: center; display: flex; flex-direction: column; color: black; font-size: 50px; font-family: Inter; font-style: italic; font-weight: 800; line-height: 50px; word-wrap: break-word; text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)">Liberties Shops</div>
-    <div style="width: 100px; height: 100px; left: 379px; top: 84px; position: absolute; overflow: hidden">
-        <div style="width: 23.96px; height: 19.79px; left: 0px; top: 0px; position: absolute; background: black"></div>
-    </div>
-    <div style="width: 25px; height: 26.27px; left: 324px; top: 87.20px; position: absolute; background: black"></div>
-    <div style="width: 433px; padding: 16px; left: 22px; top: 184px; position: absolute; background: var(--Background-Default-Default, white); overflow: hidden; border-radius: 8px; outline: 1px var(--Border-Default-Default, #D9D9D9) solid; outline-offset: -1px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div style="justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Keywords</div>
-            </div>
-            <div style="align-self: stretch; border-radius: 4px; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-                <div data-removable="true" data-scheme="Neutral" data-state="Default" data-variant="Secondary" style="padding: 8px; background: var(--Background-Default-Secondary, #F5F5F5); border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex">
-                    <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">Organic</div>
-                    <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                        <div style="width: 8px; height: 8px; left: 4px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Default-Default, #1E1E1E) solid; outline-offset: -0.80px"></div>
-                    </div>
-                </div>
-                <div data-removable="true" data-scheme="Neutral" data-state="Default" data-variant="Secondary" style="padding: 8px; background: var(--Background-Default-Secondary, #F5F5F5); border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex">
-                    <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">Pork</div>
-                    <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                        <div style="width: 8px; height: 8px; left: 4px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Default-Default, #1E1E1E) solid; outline-offset: -0.80px"></div>
-                    </div>
-                </div>
-                <div data-removable="true" data-scheme="Neutral" data-state="Default" data-variant="Secondary" style="padding: 8px; background: var(--Background-Default-Secondary, #F5F5F5); border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex">
-                    <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">Budget</div>
-                    <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                        <div style="width: 8px; height: 8px; left: 4px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Default-Default, #1E1E1E) solid; outline-offset: -0.80px"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                <div data-has-description="true" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Open</div>
-                    </div>
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; position: relative"></div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Secondary, #757575); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Only shows stores that are currently open</div>
-                    </div>
-                </div>
-                <div data-has-description="true" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Transportation</div>
-                    </div>
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; position: relative"></div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Secondary, #757575); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Expands search to include shops further away</div>
-                    </div>
-                </div>
-                <div data-has-description="true" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Don’t close soon</div>
-                    </div>
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; position: relative"></div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Secondary, #757575); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Removes stores that close less than 30 min from now</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div data-has-description="false" data-has-label="true" data-state="Default" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Price Range</div>
-                <div style="justify-content: flex-start; align-items: center; display: flex">
-                    <div style="text-align: right; color: var(--Text-Default-Default, #1E1E1E); font-size: 14px; font-family: Inter; font-weight: 400; line-height: 19.60px; word-wrap: break-word">€</div>
-                    <div style="text-align: right; color: var(--Text-Default-Default, #1E1E1E); font-size: 14px; font-family: Inter; font-weight: 400; line-height: 19.60px; word-wrap: break-word">10-100</div>
-                </div>
-            </div>
-            <div style="align-self: stretch; justify-content: flex-start; align-items: center; display: inline-flex">
-                <div style="flex: 1 1 0; height: 8px; background: var(--Background-Brand-Secondary, #E6E6E6); border-radius: 9999px; justify-content: flex-start; align-items: center; display: flex">
-                    <div style="width: 16px; height: 16px; position: relative; background: var(--Background-Brand-Default, #2C2C2C); border-radius: 9999px"></div>
-                    <div style="flex: 1 1 0; height: 6px"></div>
-                    <div style="width: 16px; height: 16px; position: relative; background: var(--Background-Brand-Default, #2C2C2C); border-radius: 9999px"></div>
-                </div>
-            </div>
-        </div>
-        <div style="width: 315px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div style="justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">inventory</div>
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                <div data-has-description="false" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Clothing</div>
-                    </div>
-                </div>
-                <div data-has-description="false" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Butcher</div>
-                    </div>
-                </div>
-                <div data-has-description="false" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Produce</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div style="justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                <div style="color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Distance</div>
-            </div>
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                <div data-has-description="false" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Nearest</div>
-                    </div>
-                </div>
-                <div data-has-description="false" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">3Km</div>
-                    </div>
-                </div>
-                <div data-has-description="false" data-state="Default" data-value-type="Checked" style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 12px; display: inline-flex">
-                        <div style="width: 16px; height: 16px; background: var(--Background-Brand-Default, #2C2C2C); overflow: hidden; border-radius: 4px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                            <div data-size="16" style="width: 16px; height: 16px; position: relative; overflow: hidden">
-                                <div style="width: 10.67px; height: 7.33px; left: 2.67px; top: 4px; position: absolute; outline: 1.60px var(--Icon-Brand-On-Brand, #F5F5F5) solid; outline-offset: -0.80px"></div>
-                            </div>
-                        </div>
-                        <div style="flex: 1 1 0; color: var(--Text-Default-Default, #1E1E1E); font-size: 16px; font-family: Inter; font-weight: 400; line-height: 22.40px; word-wrap: break-word">5Km</div>
+                    <div class="shop-info">
+                        <p><b>1.5 KM away</b></p>
+                        <p><b>08:00 - 19:00</b></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div style="width: 16px; height: 20px; left: 1175px; top: 1166px; position: absolute">
-        <div style="width: 16px; height: 20px; left: 0px; top: 0px; position: absolute; overflow: hidden">
-            <div style="width: 14.91px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #1DAEEF"></div>
-            <div style="width: 7.46px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #3EC3FF"></div>
+
+    <aside id="advanced-filters" class="advanced-filters">
+        <button class="close-filters-btn" id="close-filters-btn">×</button>
+        
+        <div class="keywords-section">
+            <label class="filter-label-text">Keywords</label>
+            <div class="keyword-tags">
+                <span class="keyword-tag">
+                    Organic
+                    <button class="tag-remove">×</button>
+                </span>
+                <span class="keyword-tag">
+                    Pork
+                    <button class="tag-remove">×</button>
+                </span>
+                <span class="keyword-tag">
+                    Budget
+                    <button class="tag-remove">×</button>
+                </span>
+            </div>
         </div>
-    </div>
-    <div style="width: 105px; height: 20px; left: 730px; top: 795px; position: absolute">
-        <div style="width: 16px; height: 20px; left: 0px; top: 0px; position: absolute; overflow: hidden">
-            <div style="width: 14.91px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #1DAEEF"></div>
-            <div style="width: 7.46px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #3EC3FF"></div>
+
+        <div class="checkbox-section">
+            <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-content">
+                    <span class="checkbox-label">Open</span>
+                    <span class="checkbox-description">Only shows stores that are currently open</span>
+                </div>
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-content">
+                    <span class="checkbox-label">Transportation</span>
+                    <span class="checkbox-description">Expands search to include shops further away</span>
+                </div>
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-content">
+                    <span class="checkbox-label">Don't close soon</span>
+                    <span class="checkbox-description">Removes stores that close less than 30 min from now</span>
+                </div>
+            </label>
         </div>
-    </div>
-    <div style="width: 16px; height: 20px; left: 1088px; top: 899px; position: absolute">
-        <div style="width: 16px; height: 20px; left: 0px; top: 0px; position: absolute; overflow: hidden">
-            <div style="width: 14.91px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #1DAEEF"></div>
-            <div style="width: 7.46px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #3EC3FF"></div>
+
+        <div class="slider-section">
+            <div class="slider-header">
+                <label class="filter-label-text">Price Range</label>
+                <span class="slider-value">€10-100</span>
+            </div>
+            <input type="range" class="price-slider" min="10" max="100" value="50">
         </div>
-    </div>
-    <div style="width: 16px; height: 20px; left: 1140px; top: 984px; position: absolute">
-        <div style="width: 16px; height: 20px; left: 0px; top: 0px; position: absolute; overflow: hidden">
-            <div style="width: 14.91px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #1DAEEF"></div>
-            <div style="width: 7.46px; height: 19.12px; left: 0.11px; top: 0.20px; position: absolute; background: #3EC3FF"></div>
+
+        <div class="checkbox-section">
+            <label class="filter-label-text">inventory</label>
+            
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Clothing</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Butcher</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Produce</span>
+            </label>
         </div>
-    </div>
-</div>
+
+        <div class="checkbox-section">
+            <label class="filter-label-text">Distance</label>
+            
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Nearest</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>3Km</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>5Km</span>
+            </label>
+        </div>
+    </aside>
+
+    <script>
+        window.addEventListener('load', function() {
+            var map = L.map('map').setView([53.3415, -6.2777], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            var blueIcon = L.icon({
+                iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMTIgMEMxOC42MjcgMCAyNCA1LjM3MyAyNCAxMkMyNCAxOC42MjcgMTIgMzIgMTIgMzJDMTIgMzIgMCAyMC42MjcgMCAxMkMwIDUuMzczIDUuMzczIDAgMTIgMFoiIGZpbGw9IiMxREFFRUYiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=',
+                iconSize: [24, 32],
+                iconAnchor: [12, 32],
+                popupAnchor: [0, -32]
+            });
+
+            L.marker([53.3415, -6.2777], {icon: blueIcon}).addTo(map)
+                .bindPopup('<b>Meath St. Butchers</b><br>€2.65<br>8:00 - 17:30');
+
+            L.marker([53.3425, -6.2787], {icon: blueIcon}).addTo(map)
+                .bindPopup('<b>Another Shop</b>');
+            
+            L.marker([53.3405, -6.2767], {icon: blueIcon}).addTo(map)
+                .bindPopup('<b>Third Shop</b>');
+
+            const toggleBtn = document.getElementById('toggle-filters-btn');
+            const closeBtn = document.getElementById('close-filters-btn');
+            const advancedFilters = document.getElementById('advanced-filters');
+
+            toggleBtn.addEventListener('click', function() {
+                advancedFilters.classList.add('active');
+            });
+
+            closeBtn.addEventListener('click', function() {
+                advancedFilters.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>
