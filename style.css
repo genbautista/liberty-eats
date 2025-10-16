@@ -1,3 +1,9 @@
+.leaflet-container {
+    width: calc(100vw - 29rem);
+    height: calc(100vh - 4.5rem);
+    left: 29rem
+}
+
 .header {
     width: 31.5rem;        
     height: 6.625rem;      
@@ -259,6 +265,10 @@ nav {
     cursor: pointer;
     transition: all 0.2s ease;
     box-sizing: border-box;
+}
+
+.left {
+  text-align: left;
 }
 
 .shop-card:hover {
@@ -564,4 +574,3 @@ nav {
 
 .close-filters-btn:hover {
     color: #1E1E1E;
-}
