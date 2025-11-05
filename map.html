@@ -42,54 +42,99 @@
         </div>
 
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="🔍 Search">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="main-search-input"
+                placeholder="🔍 Search shops or items..."
+                autocomplete="off"
+            >
+            <div class="search-results-dropdown" id="search-results-dropdown"></div>
         </div>
 
-        <section class="filter-section">
-            <h3 class="section-header">Inventory Type</h3>
+         <section class="filter-section">
+            <h3 class="section-header">Categories</h3>
             
-            <button class="filter-item">
+            <button class="filter-item category-filter" data-category="Produce">
                 <span class="filter-icon">🍎</span>
-                <span class="filter-label">Fruit & Veg</span>
-                <span class="filter-detail">Expand</span>
+                <span class="filter-label">Produce</span>
             </button>
 
-            <button class="filter-item filter-item-selected">
+            <button class="filter-item category-filter" data-category="Dairy">
+                <span class="filter-icon">🥛</span>
+                <span class="filter-label">Dairy</span>
+            </button>
+
+            <button class="filter-item category-filter" data-category="Meat">
                 <span class="filter-icon">🥩</span>
-                <span class="filter-label">Butcher</span>
-                <span class="filter-detail">Expand ›</span>
+                <span class="filter-label">Meat</span>
             </button>
 
-            <button class="filter-item filter-item-nested">
-                <span class="filter-icon">🍗</span>
-                <span class="filter-label">Chicken</span>
-            </button>
-
-            <button class="filter-item">
+            <button class="filter-item category-filter">
                 <span class="filter-icon">👕</span>
                 <span class="filter-label">Clothing</span>
             </button>
         </section>
 
         <section class="filter-section">
+            <h3 class="section-header">Store Types</h3>
+            
+            <button class="filter-item type-filter" data-type="Grocery">
+                <span class="filter-icon">🛒</span>
+                <span class="filter-label">Grocery</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Restaurant">
+                <span class="filter-icon">🍽️</span>
+                <span class="filter-label">Restaurant</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Pub">
+                <span class="filter-icon">🍺</span>
+                <span class="filter-label">Pub</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Hardware">
+                <span class="filter-icon">🔨</span>
+                <span class="filter-label">Hardware</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Home Goods">
+                <span class="filter-icon">🏠</span>
+                <span class="filter-label">Home Goods</span>
+            </button>
+
+        </section>
+        
+        <section class="filter-section">
             <h3 class="section-header">Distance</h3>
             
-            <button class="filter-item">
+            <button class="filter-item distance-filter active" data-distance="all">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">All</span>
+            </button>
+
+            <button class="filter-item distance-filter" data-distance="1">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">1km</span>
+            </button>
+
+            <button class="filter-item distance-filter" data-distance="2">
                 <span class="filter-icon">📍</span>
                 <span class="filter-label">2km</span>
             </button>
 
-            <button class="filter-item">
+            <button class="filter-item distance-filter" data-distance="5">
                 <span class="filter-icon">📍</span>
                 <span class="filter-label">5km</span>
             </button>
         </section>
 
         <!-- Results section with shop cards -->
-        <div class="results-section">
-            <h3 class="results-header">Results (3)</h3>
+        <div class="results-section" id="results-section">
+            <h3 class="results-header" id="results-header">Results (3)</h3>
             
-            <div class="shop-card">
+            <div class="shop-card" data-shop-id="1" data-shop-name="Meath St. Butchers">
                 <img class="shop-image" src="https://placehold.co/401x247" alt="Shop image">
                 <div class="shop-content">
                     <div class="shop-info">
@@ -103,7 +148,7 @@
                 </div>
             </div>
 
-            <div class="shop-card">
+            <div class="shop-card" data-shop-id="2" data-shop-name="Thomas Street Market">
                 <img class="shop-image" src="https://placehold.co/401x247" alt="Shop image">
                 <div class="shop-content">
                     <div class="shop-info">
@@ -117,7 +162,7 @@
                 </div>
             </div>
 
-            <div class="shop-card">
+            <div class="shop-card" data-shop-id="3" data-shop-name="Francis Street Deli">
                 <img class="shop-image" src="https://placehold.co/401x247" alt="Shop image">
                 <div class="shop-content">
                     <div class="shop-info">
@@ -228,8 +273,70 @@
     </aside>
 
     <script>
+         const shopData = [
+            {
+                id: 1,
+                name: "Meath St. Butchers",
+                address: "Meath Street, Dublin 8",
+                category: "Butcher",
+                type: "Meat",
+                lat: 53.3415,
+                lng: -6.2777,
+                price: "€2.65",
+                hours: "8:00 - 17:30",
+                distance: 1.2,
+                inventory: [
+                    { name: "Pork Chops", category: "Meat", price: 12.50 },
+                    { name: "Beef Steak", category: "Meat", price: 18.00 },
+                    { name: "Chicken Breast", category: "Meat", price: 8.50 },
+                    { name: "Lamb Shoulder", category: "Meat", price: 15.00 }
+                ]
+            },
+            {
+                id: 2,
+                name: "Thomas Street Market",
+                address: "Thomas Street, Dublin 8",
+                category: "Grocery",
+                type: "Grocery",
+                lat: 53.3425,
+                lng: -6.2787,
+                price: "€3.50",
+                hours: "09:00 - 17:00",
+                distance: 0.8,
+                inventory: [
+                    { name: "Tomatoes", category: "Produce", price: 2.50 },
+                    { name: "Lettuce", category: "Produce", price: 1.80 },
+                    { name: "Milk", category: "Dairy", price: 1.20 },
+                    { name: "Bread", category: "Bakery", price: 2.00 },
+                    { name: "Apples", category: "Produce", price: 3.00 }
+                ]
+            },
+            {
+                id: 3,
+                name: "Francis Street Deli",
+                address: "Francis Street, Dublin 8",
+                category: "Deli",
+                type: "Restaurant",
+                lat: 53.3405,
+                lng: -6.2767,
+                price: "€4.25",
+                hours: "08:00 - 19:00",
+                distance: 1.5,
+                inventory: [
+                    { name: "Sandwiches", category: "Ready-made", price: 5.50 },
+                    { name: "Coffee", category: "Beverages", price: 3.00 },
+                    { name: "Pastries", category: "Bakery", price: 3.50 },
+                    { name: "Salads", category: "Ready-made", price: 6.00 }
+                ]
+            }
+        ];
+        
+        let map;
+        let markers = {};
+        let searchTimeout;
+
         window.addEventListener('load', function() {
-            var map = L.map('map').setView([53.3415, -6.2777], 15);
+            map = L.map('map').setView([53.3415, -6.2777], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
@@ -243,14 +350,14 @@
                 popupAnchor: [0, -32]
             });
 
-            L.marker([53.3415, -6.2777], {icon: blueIcon}).addTo(map)
-                .bindPopup('<b>Meath St. Butchers</b><br>€2.65<br>8:00 - 17:30');
-
-            L.marker([53.3425, -6.2787], {icon: blueIcon}).addTo(map)
-                .bindPopup('<b>Another Shop</b>');
-            
-            L.marker([53.3405, -6.2767], {icon: blueIcon}).addTo(map)
-                .bindPopup('<b>Third Shop</b>');
+           shopData.forEach(shop => {
+                const marker = L.marker([shop.lat, shop.lng], {icon: blueIcon})
+                    .addTo(map)
+                    .bindPopup(`<b>${shop.name}</b><br>${shop.price}<br>${shop.hours}`);
+                
+                // Store marker reference for later use
+                markers[shop.id] = marker;
+            });
 
             const toggleBtn = document.getElementById('toggle-filters-btn');
             const closeBtn = document.getElementById('close-filters-btn');
@@ -263,7 +370,316 @@
             closeBtn.addEventListener('click', function() {
                 advancedFilters.classList.remove('active');
             });
+            
+            initializeSearch();
+
+            document.querySelectorAll('.shop-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const shopId = parseInt(this.dataset.shopId);
+                    focusOnShop(shopId);
+                });
+            });
         });
+
+        function initializeSearch() {
+            const searchInput = document.getElementById('main-search-input');
+            const searchDropdown = document.getElementById('search-results-dropdown');
+
+            // Handle search input
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                const query = e.target.value.trim();
+
+                if (query.length === 0) {
+                    searchDropdown.classList.remove('active');
+                    resetMapView();
+                    showAllShopCards();
+                    return;
+                }
+
+                if (query.length >= 2) {
+                    searchTimeout = setTimeout(() => {
+                        performSearch(query);
+                    }, 300);
+                }
+            });
+
+            // Handle clicking outside to close dropdown
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-container')) {
+                    searchDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle Enter key in search
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = e.target.value.trim();
+                    if (query) {
+                        performSearch(query);
+                    }
+                }
+            });
+        }
+
+        function performSearch(query) {
+            const searchTerm = query.toLowerCase();
+            const results = [];
+
+            // Search through shops
+            shopData.forEach(shop => {
+                let score = 0;
+                const matches = [];
+
+                // Check shop name
+                if (shop.name.toLowerCase().includes(searchTerm)) {
+                    score += 10;
+                    matches.push({ type: 'Shop name', value: shop.name });
+                }
+
+                // Check shop category
+                if (shop.category && shop.category.toLowerCase().includes(searchTerm)) {
+                    score += 5;
+                    matches.push({ type: 'Category', value: shop.category });
+                }
+
+                // Check shop type
+                if (shop.type && shop.type.toLowerCase().includes(searchTerm)) {
+                    score += 5;
+                    matches.push({ type: 'Type', value: shop.type });
+                }
+
+                // Check inventory items
+                if (shop.inventory) {
+                    shop.inventory.forEach(item => {
+                        if (item.name.toLowerCase().includes(searchTerm)) {
+                            score += 8;
+                            matches.push({ type: 'Item', value: item.name });
+                        }
+                        if (item.category && item.category.toLowerCase().includes(searchTerm)) {
+                            score += 3;
+                            if (!matches.find(m => m.type === 'Item category' && m.value === item.category)) {
+                                matches.push({ type: 'Item category', value: item.category });
+                            }
+                        }
+                    });
+                }
+
+                if (score > 0) {
+                    results.push({ shop, score, matches });
+                }
+            });
+
+            // Sort by relevance
+            results.sort((a, b) => b.score - a.score);
+
+            // If no exact matches, try fuzzy search
+            if (results.length === 0) {
+                const fuzzyResults = fuzzySearch(searchTerm);
+                results.push(...fuzzyResults);
+            }
+
+            // Display results
+            displaySearchResults(results);
+            updateShopCards(results);
+            highlightMarkersOnMap(results);
+        }
+
+        function fuzzySearch(searchTerm) {
+            const results = [];
+            
+            // Define related terms for fuzzy matching
+            const relatedTerms = {
+                'vegetables': ['tomatoes', 'lettuce', 'carrots', 'produce'],
+                'fruit': ['apples', 'bananas', 'oranges', 'produce'],
+                'meat': ['beef', 'pork', 'chicken', 'lamb', 'butcher'],
+                'grocery': ['food', 'produce', 'market', 'store']
+            };
+
+            // Check if search term is related to any category
+            for (const [key, values] of Object.entries(relatedTerms)) {
+                if (key.includes(searchTerm) || values.some(v => v.includes(searchTerm))) {
+                    // Find shops that might have related items
+                    shopData.forEach(shop => {
+                        let score = 0;
+                        const matches = [];
+
+                        if (shop.category && values.some(v => shop.category.toLowerCase().includes(v))) {
+                            score += 2;
+                            matches.push({ type: 'Similar', value: shop.category });
+                        }
+
+                        if (shop.inventory) {
+                            shop.inventory.forEach(item => {
+                                if (values.some(v => item.name.toLowerCase().includes(v))) {
+                                    score += 1;
+                                    if (!matches.find(m => m.value === item.category)) {
+                                        matches.push({ type: 'Has similar items', value: item.category });
+                                    }
+                                }
+                            });
+                        }
+
+                        if (score > 0) {
+                            results.push({ shop, score, matches, fuzzy: true });
+                        }
+                    });
+                    break;
+                }
+            }
+
+            return results;
+        }
+
+        function displaySearchResults(results) {
+            const dropdown = document.getElementById('search-results-dropdown');
+            
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="no-results">No shops or items found</div>';
+                dropdown.classList.add('active');
+                return;
+            }
+
+            let html = '';
+            results.slice(0, 5).forEach(result => {
+                const matchText = result.matches
+                    .slice(0, 2)
+                    .map(m => `${m.type}: ${m.value}`)
+                    .join(', ');
+
+                html += `
+                    <div class="search-result-item" onclick="selectShopFromSearch(${result.shop.id})">
+                        <div class="search-result-name">${result.shop.name}</div>
+                        <div class="search-result-details">${result.shop.address} • ${result.shop.distance}km away</div>
+                        <div class="search-result-match">${result.fuzzy ? 'Similar: ' : 'Found: '}${matchText}</div>
+                    </div>
+                `;
+            });
+
+            dropdown.innerHTML = html;
+            dropdown.classList.add('active');
+        }
+
+        function updateShopCards(results) {
+            const resultsSection = document.getElementById('results-section');
+            const resultsHeader = document.getElementById('results-header');
+            
+            // Update header count
+            resultsHeader.textContent = `Results (${results.length})`;
+            
+            // Hide all cards first
+            document.querySelectorAll('.shop-card').forEach(card => {
+                card.style.display = 'none';
+            });
+            
+            // Show matching cards
+            results.forEach(result => {
+                const card = document.querySelector(`[data-shop-id="${result.shop.id}"]`);
+                if (card) {
+                    card.style.display = 'flex';
+                }
+            });
+        }
+
+        function highlightMarkersOnMap(results) {
+            // Reset all markers
+            Object.values(markers).forEach(marker => {
+                marker.getElement()?.classList.remove('highlighted');
+            });
+            
+            // Highlight search results
+            if (results.length > 0) {
+                const bounds = [];
+                results.forEach(result => {
+                    const marker = markers[result.shop.id];
+                    if (marker) {
+                        marker.getElement()?.classList.add('highlighted');
+                        bounds.push([result.shop.lat, result.shop.lng]);
+                    }
+                });
+                
+                // Fit map to show all results
+                if (bounds.length > 0) {
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            }
+        }
+
+        function selectShopFromSearch(shopId) {
+            const shop = shopData.find(s => s.id === shopId);
+            if (!shop) return;
+            
+            // Close dropdown
+            document.getElementById('search-results-dropdown').classList.remove('active');
+            
+            // Update search input
+            document.getElementById('main-search-input').value = shop.name;
+            
+            // Focus on shop
+            focusOnShop(shopId);
+        }
+
+        function focusOnShop(shopId) {
+            const shop = shopData.find(s => s.id === shopId);
+            if (!shop) return;
+            
+            // Center map on shop
+            map.setView([shop.lat, shop.lng], 17);
+            
+            // Open popup
+            const marker = markers[shopId];
+            if (marker) {
+                marker.openPopup();
+            }
+            
+            // Highlight shop card
+            document.querySelectorAll('.shop-card').forEach(card => {
+                if (parseInt(card.dataset.shopId) === shopId) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    card.style.boxShadow = '0 0.5rem 1rem rgba(0, 136, 255, 0.3)';
+                    setTimeout(() => {
+                        card.style.boxShadow = '';
+                    }, 2000);
+                }
+            });
+        }
+
+        function resetMapView() {
+            map.setView([53.3415, -6.2777], 15);
+            Object.values(markers).forEach(marker => {
+                marker.getElement()?.classList.remove('highlighted');
+            });
+        }
+
+        function showAllShopCards() {
+            document.querySelectorAll('.shop-card').forEach(card => {
+                card.style.display = 'flex';
+            });
+            document.getElementById('results-header').textContent = `Results (${shopData.length})`;
+        }
+
+        // When API is ready, replace the shopData array with this:
+        /*
+        async function loadShopsFromAPI() {
+            try {
+                const response = await fetch('YOUR_API_URL/shops');
+                const shops = await response.json();
+                
+                // Load inventory for each shop
+                for (let shop of shops) {
+                    const invResponse = await fetch(`YOUR_API_URL/shops/${shop.id}/inventory`);
+                    shop.inventory = await invResponse.json();
+                }
+                
+                return shops;
+            } catch (error) {
+                console.error('Failed to load shops from API:', error);
+                return shopData; // Fallback to local data
+            }
+        }
+        */
+
     </script>
 </body>
 </html>
