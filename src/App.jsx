@@ -63,6 +63,10 @@ function App() {
 			setResultPopupText("Submission error.\n" + json.error)
 			return
 		}
+		if (res.status == 429) {
+			setResultPopupText("Rate limited! Please try again in a moment.")
+			return
+		}
 		if (res.status == 500) {
 			setResultPopupText("Server error.\n" + json.error)
 			return
