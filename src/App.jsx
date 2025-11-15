@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import * as L from "leaflet";
 
 const url = "https://rest-liberties-shops.libertiesshops.workers.dev"
-const userLat = 53.34296378813723
-const userLong = -6.280536890952785
 
 function App() {
 	//useState means that React will automatically rerender parts of the page they're used in when they update, as long as they're updated with the function returned as the second paramter of useState
 	const [stores, setStores] = useState({})
+	const [locationOn, setLocationOn] = useState(false)
+	const [userLat, setUserLat] = useState(0.1)
+	const [userLong, setUserLong] = useState(0.1)
 
 	const fetchStores = () => {
 		fetch(url + "/stores").then(res => res.json()).then((json) => setStores(json))
@@ -45,10 +47,31 @@ function App() {
 		return Math.round(a * 10) / 10
 	}
 	
+	const updateLocation = (pos) => {
+		setUserLat(pos.coords.latitude);
+		setUserLong(pos.coords.longitude);
+		setLocationOn(true)
+	}
+	
+	const disableLocation = () => {
+		setLocationOn(false)
+	}
+	
+	const locationSetup = () => {
+		if (navigator.geolocation) {
+			navigator.geolocation.watchPosition(updateLocation, disableLocation)
+		} else {
+			disableLocation()
+		}
+	}
+	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
 	useEffect(() => {
 		fetchStores();
+		locationSetup();
 	}, []);
+
+	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [20,20]})
 
 	return (
 	<>
@@ -79,6 +102,9 @@ function App() {
 			attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
+			{locationOn && <Marker position={[userLat, userLong]} icon={userIcon}>
+			</Marker>
+			}
 		    	{Object.keys(stores).map((storeID) => (
 				<Marker position={[stores[storeID].latitude, stores[storeID].longitude]}>
 					<Popup>
@@ -153,7 +179,7 @@ function App() {
 				<p>{stores[storeID].website}</p>
 				    </div>
 				    <div class="shop-info">
-				        <p><b>{computeDistance(stores[storeID].latitude, stores[storeID].longitude)} km away</b></p>
+				        {locationOn && <p><b>{computeDistance(stores[storeID].latitude, stores[storeID].longitude)} km away</b></p>}
 					<p>{stores[storeID].address}</p>
 				        <p><b>12:00 - 18:15</b></p>
 				    </div>
