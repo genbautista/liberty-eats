@@ -53,15 +53,6 @@ function App() {
 	return (
 	<>
 	    <nav>
-		<a href="./placeholder.html">
-		     <div class="navbar-item" style={{width: "3.868rem", height: "2.067rem", right: "3.125rem", position: "absolute", top: "0.9rem", display: "flex", alignItems: "center", justifyContent: "center", color: "black", fontSize: "1.25rem", fontFamily: "Inter", fontStyle: "italic", fontWeight: "800", textShadow: "0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)"}}>Login</div>
-		</a>
-		<a href="./placeholder.html">
-		    <div class="navbar-item" style={{width: "5.307rem", height: "1.567rem", right: "8.125rem", position: "absolute", top: "1.15rem", display: "flex", alignItems: "center", justifyContent: "center", color: "black", fontSize: "1.25rem", fontFamily: "Inter", fontStyle: "italic", fontWeight: "800", textShadow: "0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)"}}>Settings</div>
-		</a>
-		<a href="./map.html">
-		    <img class="navbar-item" style={{width: "3rem", height: "3rem", right: "13.5rem", position: "absolute", top: "0.5rem"}} src="./src/assets/Map_icon.png" />
-		</a>
 		<a href="./index.html">
 		    <div class="navbar-item" style={{width: "25.454rem", height: "2.769rem", left: "3.125rem", position: "absolute", top: "0.6rem", display: "flex", alignItems: "center", color: "black", fontSize: "3.125rem", fontFamily: "Inter", fontStyle: "italic", fontWeight: "800", textShadow: "0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)"}}>Liberties Shops</div>
 		</a>
