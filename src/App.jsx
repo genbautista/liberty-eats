@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
-const url = "https://rest-liberties-shops.libertiesshops.workers.dev"
+const url = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
+//const url = "http://localhost:8787" //testing URL
 const userLat = 53.34296378813723
 const userLong = -6.280536890952785
+const DAYS_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
 function App() {
 	//useState means that React will automatically rerender parts of the page they're used in when they update, as long as they're updated with the function returned as the second paramter of useState
 	const [stores, setStores] = useState({})
+	const [expandedHours, setExpandedHours] = useState(-1)
 
 	const fetchStores = () => {
 		fetch(url + "/stores").then(res => res.json()).then((json) => setStores(json))
@@ -43,6 +46,33 @@ function App() {
 			Math.cos(lat1) * Math.cos(lat2))
 		a = 2 * 6371 * Math.asin(Math.sqrt(a))
 		return Math.round(a * 10) / 10
+	}
+	
+	const convertHour = (hourNumber) => {
+		let hour = Math.floor(hourNumber)
+		let minutes = (hourNumber % 1) * 60
+		
+		return String(hour).padStart(2,"0") + ":" + String(minutes).padStart(2,"0")
+	}
+	
+	const printHours = (hoursPair) => {
+		if (hoursPair[0] == 0 && hoursPair[1] == 0) {
+			return "CLOSED"
+		}
+		return convertHour(hoursPair[0]) + " - " + convertHour(hoursPair[1])
+	}
+	
+	const getWeekday = () => {
+		const d = new Date();
+		return d.getDay();
+	}
+	
+	const toggleExpandedHours = (storeID) => {
+		if (expandedHours != storeID) {
+			setExpandedHours(storeID)
+		} else {
+			setExpandedHours(-1)
+		}
 	}
 	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
@@ -145,7 +175,7 @@ function App() {
 		    
 		    {Object.keys(stores).map((storeID) => (
 			    <div class="shop-card">
-				<img class="shop-image" src="https://placehold.co/401x247" alt="Shop image"></img>
+				<img class="shop-image" src={stores[storeID].pictureURL} alt="Shop image"></img>
 				<div class="shop-content">
 				    <div class="shop-info left">
 				        <h3 class="shop-name">{stores[storeID].storeName}</h3>
@@ -155,7 +185,12 @@ function App() {
 				    <div class="shop-info">
 				        <p><b>{computeDistance(stores[storeID].latitude, stores[storeID].longitude)} km away</b></p>
 					<p>{stores[storeID].address}</p>
-				        <p><b>12:00 - 18:15</b></p>
+				        <p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(stores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
+				        {expandedHours == storeID && <div class="expanded-hours">
+						{Array(7).keys().map((dayIndex) => (
+				        		<p>{printHours(stores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
+				        	))}
+				        </div>}
 				    </div>
 				</div>
 			    </div>
