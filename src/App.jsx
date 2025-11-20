@@ -103,6 +103,10 @@ function App() {
 		return Math.round(a * 10) / 10
 	}
 	
+	const setScrollPosition = (storeID) => {
+		document.getElementById("store-" + storeID).scrollIntoView({behavior: "smooth", block:"center"})
+	}
+	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
 	useEffect(() => {
 		fetchStores();
@@ -234,9 +238,8 @@ function App() {
 		{ /* Results section with shop cards */ }
 		<div class="results-section">
 		    <h3 class="results-header">Results ({Object.keys(matchingStores).length})</h3>
-		    
 		    {Object.keys(matchingStores).map((storeID) => (
-			    <div class="shop-card">
+			    <div class="shop-card" id={"store-" + storeID}>
 				<img class="shop-image" src="https://placehold.co/401x247" alt="Shop image"></img>
 				<div class="shop-content">
 				    <div class="shop-info left">
