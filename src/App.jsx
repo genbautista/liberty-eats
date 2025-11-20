@@ -121,6 +121,7 @@ function App() {
 		} else {
 			disableLocation()
 		}
+	}
 
   const setScrollPosition = (storeID) => {
 		document.getElementById("store-" + storeID).scrollIntoView({behavior: "smooth", block:"center"})
@@ -128,6 +129,7 @@ function App() {
 	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
 	useEffect(() => {
+		fetchStores();
 		locationSetup();
 		fetchAllStores();
 		fetchAllCategories();
@@ -146,7 +148,7 @@ function App() {
 	    { /* Dropdown toggle button for advanced filters */ }
 	    <button id="toggle-filters-btn" class="toggle-filters-btn big-button">
 		<span>⚙️ Filters</span>
-	    </button>
+	    </button>matchingStores
 	    
 	    <button id="add-item" class="big-button" onClick={() => {setAddingItem(true)}}>Add Item</button>
 	    { (resultPopupText != "")&& <div id="result-popup">
@@ -200,7 +202,7 @@ function App() {
 			</Marker>
 			}
 		    	{Object.keys(matchingStores).map((storeID) => (
-				<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]}>
+				<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}}>
 					<Popup>
 					  {matchingStores[storeID].storeName}
 					</Popup>
@@ -272,8 +274,8 @@ function App() {
 				<p>{matchingStores[storeID].website}</p>
 				    </div>
 				    <div class="shop-info">
-				        {locationOn && <p><b>{computeDistance(stores[storeID].latitude, stores[storeID].longitude)} km away</b></p>}
-					<p>{stores[storeID].address}</p>
+				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
+					<p>{matchingStores[storeID].address}</p>
 				        <p><b>12:00 - 18:15</b></p>
 				    </div>
 				</div>
