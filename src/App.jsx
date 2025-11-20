@@ -5,6 +5,8 @@ import * as L from "leaflet";
 
 const url = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
 //const url = "http://localhost:8787" //testing URL
+const DAYS_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+
 
 function App() {
 	//useState means that React will automatically rerender parts of the page they're used in when they update, as long as they're updated with the function returned as the second paramter of useState
@@ -16,6 +18,7 @@ function App() {
 	const [locationOn, setLocationOn] = useState(false)
 	const [userLat, setUserLat] = useState(0.1)
 	const [userLong, setUserLong] = useState(0.1)
+	const [expandedHours, setExpandedHours] = useState(-1)
 
 	const fetchAllCategories = () => {
 		fetch(url + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
@@ -105,6 +108,33 @@ function App() {
 		return Math.round(a * 10) / 10
 	}
 	
+	const convertHour = (hourNumber) => {
+		let hour = Math.floor(hourNumber)
+		let minutes = (hourNumber % 1) * 60
+		
+		return String(hour).padStart(2,"0") + ":" + String(minutes).padStart(2,"0")
+	}
+	
+	const printHours = (hoursPair) => {
+		if (hoursPair[0] == 0 && hoursPair[1] == 0) {
+			return "CLOSED"
+		}
+		return convertHour(hoursPair[0]) + " - " + convertHour(hoursPair[1])
+	}
+	
+	const getWeekday = () => {
+		const d = new Date();
+		return d.getDay();
+	}
+	
+	const toggleExpandedHours = (storeID) => {
+		if (expandedHours != storeID) {
+			setExpandedHours(storeID)
+		} else {
+			setExpandedHours(-1)
+		}
+	}
+  
 	const updateLocation = (pos) => {
 		setUserLat(pos.coords.latitude);
 		setUserLong(pos.coords.longitude);
@@ -266,7 +296,7 @@ function App() {
 		    <h3 class="results-header">Results ({Object.keys(matchingStores).length})</h3>
 		    {Object.keys(matchingStores).map((storeID) => (
 			    <div class="shop-card" id={"store-" + storeID}>
-				<img class="shop-image" src="https://placehold.co/401x247" alt="Shop image"></img>
+				<img class="shop-image" src={matchingStores[storeID].pictureURL} alt="Shop image"></img>
 				<div class="shop-content">
 				    <div class="shop-info left">
 				        <h3 class="shop-name">{matchingStores[storeID].storeName}</h3>
@@ -276,7 +306,12 @@ function App() {
 				    <div class="shop-info">
 				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
 					<p>{matchingStores[storeID].address}</p>
-				        <p><b>12:00 - 18:15</b></p>
+				        <p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(matchingStores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
+				        {expandedHours == storeID && <div class="expanded-hours">
+						{Array(7).keys().map((dayIndex) => (
+				        		<p>{printHours(matchingStores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
+				        	))}
+				        </div>}
 				    </div>
 				</div>
 			    </div>
