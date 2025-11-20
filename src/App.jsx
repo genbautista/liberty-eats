@@ -146,6 +146,7 @@ function App() {
 			    	<input id="item-name-input" name="itemName"></input>
 		    	</div>
 		    	<div>
+		    		<label class="optional-label">optional--can be left blank</label><br></br>
 			    	<label for="price-input">Price: € </label>
 			    	<input id="price-euros-input" class="price-input" placeholder={"0"} name="euros"></input>
 			    	<span> . </span>
