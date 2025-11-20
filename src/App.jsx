@@ -306,10 +306,10 @@ function App() {
 				    <div class="shop-info">
 				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
 					<p>{matchingStores[storeID].address}</p>
-				        <p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(stores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
+				        <p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(matchingStores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
 				        {expandedHours == storeID && <div class="expanded-hours">
 						{Array(7).keys().map((dayIndex) => (
-				        		<p>{printHours(stores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
+				        		<p>{printHours(matchingStores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
 				        	))}
 				        </div>}
 				    </div>
