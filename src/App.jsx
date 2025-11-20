@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import * as L from "leaflet";
 
 const url = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
 //const url = "http://localhost:8787" //testing URL
-const userLat = 53.34296378813723
-const userLong = -6.280536890952785
 
 function App() {
 	//useState means that React will automatically rerender parts of the page they're used in when they update, as long as they're updated with the function returned as the second paramter of useState
@@ -14,6 +13,9 @@ function App() {
 	const [allCategories, setAllCategories] = useState({})
 	const [addingItem, setAddingItem] = useState(false)
 	const [resultPopupText, setResultPopupText] = useState("")
+	const [locationOn, setLocationOn] = useState(false)
+	const [userLat, setUserLat] = useState(0.1)
+	const [userLong, setUserLong] = useState(0.1)
 
 	const fetchAllCategories = () => {
 		fetch(url + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
@@ -103,16 +105,37 @@ function App() {
 		return Math.round(a * 10) / 10
 	}
 	
-	const setScrollPosition = (storeID) => {
+	const updateLocation = (pos) => {
+		setUserLat(pos.coords.latitude);
+		setUserLong(pos.coords.longitude);
+		setLocationOn(true)
+	}
+	
+	const disableLocation = () => {
+		setLocationOn(false)
+	}
+	
+	const locationSetup = () => {
+		if (navigator.geolocation) {
+			navigator.geolocation.watchPosition(updateLocation, disableLocation)
+		} else {
+			disableLocation()
+		}
+	}
+
+  const setScrollPosition = (storeID) => {
 		document.getElementById("store-" + storeID).scrollIntoView({behavior: "smooth", block:"center"})
 	}
 	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
 	useEffect(() => {
 		fetchStores();
+		locationSetup();
 		fetchAllStores();
 		fetchAllCategories();
 	}, []);
+
+	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [20,20]})
 
 	return (
 	<>
@@ -125,7 +148,7 @@ function App() {
 	    { /* Dropdown toggle button for advanced filters */ }
 	    <button id="toggle-filters-btn" class="toggle-filters-btn big-button">
 		<span>⚙️ Filters</span>
-	    </button>
+	    </button>matchingStores
 	    
 	    <button id="add-item" class="big-button" onClick={() => {setAddingItem(true)}}>Add Item</button>
 	    { (resultPopupText != "")&& <div id="result-popup">
@@ -175,8 +198,11 @@ function App() {
 			attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
+			{locationOn && <Marker position={[userLat, userLong]} icon={userIcon}>
+			</Marker>
+			}
 		    	{Object.keys(matchingStores).map((storeID) => (
-				<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]}>
+				<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}}>
 					<Popup>
 					  {matchingStores[storeID].storeName}
 					</Popup>
@@ -248,7 +274,7 @@ function App() {
 				<p>{matchingStores[storeID].website}</p>
 				    </div>
 				    <div class="shop-info">
-				        <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>
+				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
 					<p>{matchingStores[storeID].address}</p>
 				        <p><b>12:00 - 18:15</b></p>
 				    </div>
