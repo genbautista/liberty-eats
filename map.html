@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="https://www.citypng.com/public/uploads/preview/cartoon-white-black-sheep-701751694953014c9syix3tze.png" />
+<link rel="Stylesheet" href="style.css"/>
+<title>LibertiesShops Map</title>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <nav>
+        <a href="./placeholder.html">
+             <div class="navbar-item" style="width: 3.868rem; height: 2.067rem; right: 3.125rem; position: absolute; top: 0.9rem; display: flex; align-items: center; justify-content: center; color: black; font-size: 1.25rem; font-family: Inter; font-style: italic; font-weight: 800; text-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)">Login</div>
+        </a>
+        <a href="./placeholder.html">
+            <div class="navbar-item" style="width: 5.307rem; height: 1.567rem; right: 8.125rem; position: absolute; top: 1.15rem; display: flex; align-items: center; justify-content: center; color: black; font-size: 1.25rem; font-family: Inter; font-style: italic; font-weight: 800; text-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)">Settings</div>
+        </a>
+        <a href="./map.html">
+            <img class="navbar-item" style="width: 3rem; height: 3rem; right: 13.5rem; position: absolute; top: 0.5rem;" src="./src/assets/Map_icon.png" />
+        </a>
+        <a href="./index.html">
+            <div class="navbar-item" style="width: 25.454rem; height: 2.769rem; left: 3.125rem; position: absolute; top: 0.6rem; display: flex; align-items: center; color: black; font-size: 3.125rem; font-family: Inter; font-style: italic; font-weight: 800; text-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)">Liberties Shops</div>
+        </a>
+    </nav>
+
+    <!-- Dropdown toggle button for advanced filters -->
+    <button id="toggle-filters-btn" class="toggle-filters-btn">
+        <span>⚙️ Filters</span>
+    </button>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <div class="filters-sidebar">
+        <div class="filters-header">
+            <h2 class="filters-title">Filters & Results</h2>
+            <button class="filters-edit-btn">⋯</button>
+        </div>
+
+        <div class="search-container">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="main-search-input"
+                placeholder="🔍 Search stores or items..."
+                autocomplete="off"
+            >
+            <div class="search-results-dropdown" id="search-results-dropdown"></div>
+        </div>
+
+         <section class="filter-section">
+            <h3 class="section-header">Categories</h3>
+            
+            <button class="filter-item category-filter" data-category="Produce">
+                <span class="filter-icon">🍎</span>
+                <span class="filter-label">Produce</span>
+            </button>
+
+            <button class="filter-item category-filter" data-category="Dairy">
+                <span class="filter-icon">🥛</span>
+                <span class="filter-label">Dairy</span>
+            </button>
+
+            <button class="filter-item category-filter" data-category="Meat">
+                <span class="filter-icon">🥩</span>
+                <span class="filter-label">Meat</span>
+            </button>
+
+            <button class="filter-item category-filter">
+                <span class="filter-icon">👕</span>
+                <span class="filter-label">Clothing</span>
+            </button>
+        </section>
+
+        <section class="filter-section">
+            <h3 class="section-header">Store Types</h3>
+            
+            <button class="filter-item type-filter" data-type="Grocery">
+                <span class="filter-icon">🛒</span>
+                <span class="filter-label">Grocery</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Restaurant">
+                <span class="filter-icon">🍽️</span>
+                <span class="filter-label">Restaurant</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Pub">
+                <span class="filter-icon">🍺</span>
+                <span class="filter-label">Pub</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Hardware">
+                <span class="filter-icon">🔨</span>
+                <span class="filter-label">Hardware</span>
+            </button>
+
+            <button class="filter-item type-filter" data-type="Home Goods">
+                <span class="filter-icon">🏠</span>
+                <span class="filter-label">Home Goods</span>
+            </button>
+
+        </section>
+        
+        <section class="filter-section">
+            <h3 class="section-header">Distance</h3>
+            
+            <button class="filter-item distance-filter active" data-distance="all">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">All</span>
+            </button>
+
+            <button class="filter-item distance-filter" data-distance="1">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">1km</span>
+            </button>
+
+            <button class="filter-item distance-filter" data-distance="2">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">2km</span>
+            </button>
+
+            <button class="filter-item distance-filter" data-distance="5">
+                <span class="filter-icon">📍</span>
+                <span class="filter-label">5km</span>
+            </button>
+        </section>
+
+        <!-- Results section with store cards -->
+        <div class="results-section" id="results-section">
+            <h3 class="results-header" id="results-header">Stores</h3>
+            
+             <div class="search-loading" id="search-loading">
+                <div class="spinner"></div>
+                <p>Searching...</p>
+            </div>
+
+            <div id="store-cards-container">
+                <!-- Store cards will be dynamically inserted here -->
+            </div>
+        </div>            
+    </div>
+
+    <aside id="advanced-filters" class="advanced-filters">
+        <button class="close-filters-btn" id="close-filters-btn">×</button>
+        
+        <div class="keywords-section">
+            <label class="filter-label-text">Keywords</label>
+            <div class="keyword-tags">
+                <span class="keyword-tag">
+                    Organic
+                    <button class="tag-remove">×</button>
+                </span>
+                <span class="keyword-tag">
+                    Pork
+                    <button class="tag-remove">×</button>
+                </span>
+                <span class="keyword-tag">
+                    Budget
+                    <button class="tag-remove">×</button>
+                </span>
+            </div>
+        </div>
+
+        <div class="checkbox-section">
+            <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-content">
+                    <span class="checkbox-label">Open</span>
+                    <span class="checkbox-description">Only shows stores that are currently open</span>
+                </div>
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-content">
+                    <span class="checkbox-label">Transportation</span>
+                    <span class="checkbox-description">Expands search to include stores further away</span>
+                </div>
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox" checked>
+                <div class="checkbox-content">
+                    <span class="checkbox-label">Don't close soon</span>
+                    <span class="checkbox-description">Removes stores that close less than 30 min from now</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="slider-section">
+            <div class="slider-header">
+                <label class="filter-label-text">Price Range</label>
+                <span class="slider-value">€10-100</span>
+            </div>
+            <input type="range" class="price-slider" min="10" max="100" value="50">
+        </div>
+
+        <div class="checkbox-section">
+            <label class="filter-label-text">inventory</label>
+            
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Clothing</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Butcher</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Produce</span>
+            </label>
+        </div>
+
+        <div class="checkbox-section">
+            <label class="filter-label-text">Distance</label>
+            
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>Nearest</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>3Km</span>
+            </label>
+
+            <label class="checkbox-item-simple">
+                <input type="checkbox" checked>
+                <span>5Km</span>
+            </label>
+        </div>
+    </aside>
+
+    <script>
+        const API_BASE_URL = 'https://rest-liberties-shops.libertiesshops.workers.dev';
+        const storeData = []; // To be populated with API data
+        let map;
+        let markers = {};
+        let searchTimeout;
+        let allStores = [];
+        let storeInventories = {};
+
+        window.addEventListener('load', async function() {
+            console.log('Initializing Liberty Eats Map...'); // Debug
+
+            map = L.map('map').setView([53.3415, -6.2777], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+            
+            initializeUIHandlers();
+
+            await loadStoresFromAPI();
+            clearAllMarkers();
+            await initializeSearch();
+
+            console.log('Initialization complete'); // Debug
+        });
+
+        function addMarkerToMap(store) {
+            const blueIcon = L.icon({
+                iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMTIgMEMxOC42MjcgMCAyNCA1LjM3MyAyNCAxMkMyNCAxOC42MjcgMTIgMzIgMTIgMzJDMTIgMzIgMCAyMC42MjcgMCAxMkMwIDUuMzczIDUuMzczIDAgMTIgMFoiIGZpbGw9IiMxREFFRUYiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI2IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4=',
+                iconSize: [24, 32],
+                iconAnchor: [12, 32],
+                popupAnchor: [0, -32]
+            });
+
+            const marker = L.marker([store.lat, store.lng], {icon: blueIcon})
+                .addTo(map)
+                .bindPopup(`<b>${store.name}</b><br>${store.address}<br>${store.hours}`);
+            
+            markers[store.id] = marker;
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function clearAllMarkers() {
+            Object.values(markers).forEach(marker => {
+                map.removeLayer(marker);
+            });
+            markers = {};
+}
+
+        function initializeSearch() {
+            console.log('Initializing search functionality...'); // Debug
+
+            const searchInput = document.getElementById('main-search-input');
+            const searchDropdown = document.getElementById('search-results-dropdown');
+
+            // Handle search input
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                const query = e.target.value.trim();
+
+                if (query.length === 0) {
+                    searchDropdown.classList.remove('active');
+                    resetMapView();
+                    showAllStoreCards();
+                    return;
+                }
+
+                if (query.length >= 2) {
+                    searchTimeout = setTimeout(() => {
+                        performSearch(query);
+                        
+                    }, 300);
+                }
+            });
+
+            // Handle clicking outside to close dropdown
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-container')) {
+                    searchDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle Enter key in search
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = e.target.value.trim();
+                    if (query) {
+                        performSearch(query);
+                    }
+                }
+            });
+        }
+
+        async function performSearch(query) {
+            if (!query || query.trim().length < 2) {
+                displayStoreCards(allStores);
+                resetMapView();
+                document.getElementById('search-results-dropdown').classList.remove('active');
+                return;
+            }
+
+            const searchTerm = query.toLowerCase().trim();
+            console.log('Searching for:', searchTerm);
+            
+            const results = [];
+            
+            // Search through all stores and their inventories
+           for (const store of allStores) {
+            console.log("storeswwwwww: ", store); //check if allStores is populated or if it is using the wrong attributes to find the items within a store
+                const inventory = storeInventories[store.id] || [];
+                console.log(`Checking store ${store.id} (${store.name}), inventory items:`, inventory.length);
+                
+                // Log first few items to see structure
+                if (inventory.length > 0) {
+                    console.log(`Sample items from store ${store.id}:`, inventory.slice(0, 3));
+                }
+                
+                // Check if store name matches
+                if (store.name.toLowerCase().includes(searchTerm)) {
+                    results.push({
+                        store: store,
+                        matchType: 'store',
+                        matchedItem: null
+                    });
+                    continue;
+                }
+                
+                // Check if any inventory item matches
+                const matchingItems = inventory.filter(item => {
+                    const itemName = (item.itemName || '').toLowerCase();  
+                    
+                    return itemName.includes(searchTerm);
+                });
+                
+                if (matchingItems.length > 0) {
+                    results.push({
+                        store: store,
+                        matchType: 'item',
+                        matchedItem: matchingItems[0],
+                        matchCount: matchingItems.length
+                    });
+                }
+            }
+            
+            console.log('Search results:', results);
+            
+            // Update the display
+            if (results.length > 0) {
+                displaySearchResults(results);
+                updateStoreCardsForSearch(results);
+                highlightMarkersOnMap(results);
+            } else {
+                displayNoResults();
+            }
+        }
+        
+        function displaySearchResults(results) {
+            const dropdown = document.getElementById('search-results-dropdown');
+            
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="no-results">No results found</div>';
+                dropdown.classList.add('active');
+                return;
+            }
+            
+            dropdown.innerHTML = results.map(result => {
+                const matchInfo = result.matchType === 'item' 
+                    ? `<div class="search-result-match">Found: ${result.matchedItem.itemName}${result.matchCount > 1 ? ` (+${result.matchCount - 1} more items)` : ''}</div>`  
+                    : '<div class="search-result-match">Store name match</div>';
+                
+                return `
+                    <div class="search-result-item" onclick="selectStore(${result.store.id})">
+                        <div class="search-result-name">${result.store.name}</div>
+                        <div class="search-result-details">${result.store.address}</div>
+                        ${matchInfo}
+                    </div>
+                `;
+            }).join('');
+            
+            dropdown.classList.add('active');
+        }
+
+        function displayNoResults() {
+            const dropdown = document.getElementById('search-results-dropdown');
+            dropdown.innerHTML = '<div class="no-results">No stores found with that item</div>';
+            dropdown.classList.add('active');
+            
+            // Show all stores again
+            displayStoreCards(allStores);
+            resetMapView();
+        }
+
+        async function fetchStoresFromAPI() {
+            try {
+                const resp = await fetch('https://rest-liberties-shops.libertiesshops.workers.dev/stores');
+                if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+                const data = await resp.json();
+
+                // Transform backend data to match existing storeData structure
+                storeData = data.stores.map(store => ({
+                    id: store.storeID,
+                    name: store.storeName,
+                    address: store.address,
+                    category: store.type?.[0] || '', 
+                    type: store.type?.join(', ') || '', 
+                    lat: store.latitude,
+                    lng: store.longitude,
+                    price: store.items?.length ? `€${store.items[0].price.toFixed(2)}` : 'N/A',
+                    hours: store.hours?.map(h => `${h[0]}-${h[1]}`).join(', ') || '',
+                    distance: 0, // Keep as placeholder
+                    inventory: store.items?.map(item => ({
+                        name: item.itemName,
+                        category: item.categoryID,
+                        price: item.price
+                    })) || []
+                }));
+            } catch (err) {
+                console.error('Failed to fetch stores:', err);
+            }
+        }
+
+        function formatHours(hoursArray) {
+            if (!hoursArray || hoursArray.length !== 7) return '9:00 - 18:00';
+            
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const today = new Date().getDay();
+            const todayHours = hoursArray[today];
+            
+            if (!todayHours || (todayHours[0] === 0 && todayHours[1] === 0)) {
+                return 'Closed today';
+            }
+            
+            const openTime = `${todayHours[0]}:00`;
+            const closeTime = `${todayHours[1]}:00`;
+            return `${openTime} - ${closeTime}`;
+        }
+
+        function fuzzySearch(searchTerm) {
+            const results = [];
+            
+            // Define related terms for fuzzy matching
+            const relatedTerms = {
+                'vegetables': ['tomatoes', 'lettuce', 'carrots', 'produce'],
+                'fruit': ['apples', 'bananas', 'oranges', 'produce'],
+                'meat': ['beef', 'pork', 'chicken', 'lamb', 'butcher'],
+                'grocery': ['food', 'produce', 'market', 'store']
+            };
+
+            // Check if search term is related to any category
+            for (const [key, values] of Object.entries(relatedTerms)) {
+                if (key.includes(searchTerm) || values.some(v => v.includes(searchTerm))) {
+                    // Find stores that might have related items
+                    storeData.forEach(store => {
+                        let score = 0;
+                        const matches = [];
+
+                        if (store.category && values.some(v => store.category.toLowerCase().includes(v))) {
+                            score += 2;
+                            matches.push({ type: 'Similar', value: store.category });
+                        }
+
+                        if (store.inventory) {
+                            store.inventory.forEach(item => {
+                                if (values.some(v => item.name.toLowerCase().includes(v))) {
+                                    score += 1;
+                                    if (!matches.find(m => m.value === item.category)) {
+                                        matches.push({ type: 'Has similar items', value: item.category });
+                                    }
+                                }
+                            });
+                        }
+
+                        if (score > 0) {
+                            results.push({ store, score, matches, fuzzy: true });
+                        }
+                    });
+                    break;
+                }
+            }
+
+            return results;
+        }
+
+        function displaySearchResults(results) {
+            const dropdown = document.getElementById('search-results-dropdown');
+            
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="no-results">No results found</div>';
+                dropdown.classList.add('active');
+                return;
+            }
+            
+            dropdown.innerHTML = results.map(result => {
+                const matchInfo = result.matchType === 'item' 
+                    ? `<div class="search-result-match">Found: ${result.matchedItem.name || result.matchedItem.itemName}${result.matchCount > 1 ? ` (+${result.matchCount - 1} more items)` : ''}</div>`
+                    : '<div class="search-result-match">Store name match</div>';
+                
+                return `
+                    <div class="search-result-item" onclick="selectStore(${result.store.id})">
+                        <div class="search-result-name">${result.store.name}</div>
+                        <div class="search-result-details">${result.store.address}</div>
+                        ${matchInfo}
+                    </div>
+                `;
+            }).join('');
+            
+            dropdown.classList.add('active');
+        }
+
+        function displaySearchDropdown(results) {
+            const dropdown = document.getElementById('search-results-dropdown');
+            
+            if (!dropdown) {
+                console.error('Dropdown element not found!');
+                return;
+            }
+            
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="no-results">No stores or items found</div>';
+                dropdown.classList.add('active');
+                return;
+            }
+            
+            let html = '';
+            results.slice(0, 5).forEach(result => {
+                const itemsText = result.matchedItems.length > 0 
+                    ? `Found ${result.matchedItems.length} matching item(s)` 
+                    : result.matches.map(m => m.value).join(', ');
+                
+                html += `
+                    <div class="search-result-item" onclick="selectStore(${result.store.id})">
+                        <div class="search-result-name">${result.store.name}</div>
+                        <div class="search-result-details">
+                            ${result.store.address} • ${result.store.distance.toFixed(1)}km away
+                        </div>
+                        <div class="search-result-match">${itemsText}</div>
+                    </div>
+                `;
+            });
+            
+            dropdown.innerHTML = html;
+            dropdown.classList.add('active');
+        }
+
+        function displayStoreCards(stores) {
+            const resultsSection = document.getElementById('results-section');
+            
+            resultsSection.innerHTML = `<h3 class="results-header">All Stores (${stores.length})</h3>`;
+            
+            stores.forEach(store => {
+                const card = document.createElement('div');
+                card.className = 'store-card';
+                card.dataset.storeId = store.id;
+                
+                card.innerHTML = `
+                    <img class="store-image" src="https://via.placeholder.com/400x200/1DAEEF/ffffff?text=${encodeURIComponent(store.name)}" alt="${store.name}">
+                    <div class="store-content">
+                        <div class="store-info">
+                            <h3 class="store-name">${store.name}</h3>
+                            <p style="color: #666; font-size: 0.875rem;">${store.category}</p>
+                        </div>
+                        <div class="store-info">
+                            <p><b>${store.distance.toFixed(1)} KM</b></p>
+                            <p><b>${store.hours}</b></p>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => selectStore(store.id));
+                resultsSection.appendChild(card);
+            });
+        }
+
+        function highlightMarkersOnMap(stores) {
+            Object.values(markers).forEach(marker => {
+                marker.setOpacity(0.5);
+            });
+            
+            if (stores.length > 0) {
+                const bounds = [];
+                stores.forEach(store => {
+                    const marker = markers[store.id];
+                    if (marker) {
+                        marker.setOpacity(1);
+                        bounds.push([store.lat, store.lng]);  
+                    }
+                });
+                
+                if (bounds.length > 0) {
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            }
+        }
+        
+        function initializeUIHandlers() {
+            const toggleBtn = document.getElementById('toggle-filters-btn');
+            const closeBtn = document.getElementById('close-filters-btn');
+            const advancedFilters = document.getElementById('advanced-filters');
+
+            if (toggleBtn && closeBtn && advancedFilters) {
+                toggleBtn.addEventListener('click', () => {
+                    advancedFilters.classList.add('active');
+                });
+
+                closeBtn.addEventListener('click', () => {
+                    advancedFilters.classList.remove('active');
+                });
+            }
+        }
+
+        async function loadStoresFromAPI() {
+            try {
+                console.log('Fetching stores from API...');
+                const response = await fetch(`${API_BASE_URL}/stores`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const storesData = await response.json();
+                console.log('Stores received:', storesData);
+
+                allStores = [];
+
+                // The API returns an object with numeric keys, convert to array
+                const stores = Object.values(storesData);
+
+                for (const store of stores) {
+                    const formattedStore = {
+                        id: store.storeID,
+                        name: store.storeName,
+                        address: store.address,
+                        category: store.type,
+                        lat: parseFloat(store.latitude),
+                        lng: parseFloat(store.longitude),
+                        hours: formatHours(store.hours),
+                        price: '€0.00',
+                        website: store.website || '',
+                        description: store.description || '',
+                        pictureURL: store.pictureURL || '',
+                        distance: calculateDistance(53.3415, -6.2777,
+                            parseFloat(store.latitude),
+                            parseFloat(store.longitude)
+                        )
+                    };
+
+                    // Load inventory for this store
+                    try {
+                        console.log(`Fetching inventory for store ${formattedStore.id}`);
+                        const invResponse = await fetch(`${API_BASE_URL}/items?storeID=${formattedStore.id}`);
+                        console.log(`Inventory response status for store ${formattedStore.id}:`, invResponse.status);
+                        console.log(invResponse)
+                        
+                        if (invResponse.ok) {
+                            const inventoryData = await invResponse.json();
+                            console.log(`Raw inventory data for store ${formattedStore.id}:`, inventoryData);
+                            
+                            // Convert object to array
+                            const inventory = Object.values(inventoryData);
+                            console.log(`Converted inventory array for store ${formattedStore.id}:`, inventory);
+                            console.log(`Number of items in store ${formattedStore.id}:`, inventory.length);
+                            
+                            storeInventories[formattedStore.id] = inventory;
+                            formattedStore.inventory = inventory;
+                        } else {
+                            console.log(`No inventory for store ${formattedStore.id}, status: ${invResponse.status}`);
+                            storeInventories[formattedStore.id] = [];
+                            formattedStore.inventory = [];
+                        }
+                    } catch (error) {
+                        console.error(`Failed to load inventory for store ${formattedStore.id}:`, error);
+                        storeInventories[formattedStore.id] = [];
+                        formattedStore.inventory = [];
+                    }
+
+                    allStores.push(formattedStore);
+                    addMarkerToMap(formattedStore);
+                }
+
+                console.log('All stores loaded:', allStores); // Debug
+                console.log('Store inventories object:', storeInventories); // Debug
+                console.log('Number of stores with inventory:', Object.keys(storeInventories).length); // Debug
+                displayStoreCards(allStores);
+                updateSearchStatus('');
+
+            } catch (error) {
+                console.error('Failed to load stores from API:', error);
+                updateSearchStatus('Using sample data (API unavailable)');
+            }
+        }
+
+        function updateStoreCardsForSearch(results) {
+            const container = document.getElementById('store-cards-container');
+            const resultsHeader = document.getElementById('results-header');
+            
+            // Update header count
+            resultsHeader.textContent = `Results (${results.length})`;
+            
+            // Clear and rebuild store cards with only matching stores
+            container.innerHTML = '';
+            
+            results.forEach(result => {
+                const store = result.store;
+                const matchInfo = result.matchType === 'item' 
+                    ? `<div class="match-info">✓ Has ${result.matchedItem.itemName}${result.matchCount > 1 ? ` (+${result.matchCount - 1} more)` : ''}</div>`
+                    : '';
+                
+                const card = document.createElement('div');
+                card.className = 'store-card search-match';
+                card.dataset.storeId = store.id;
+                card.onclick = () => selectStore(store.id);
+                
+                card.innerHTML = `
+                    <div class="store-content">
+                        <div class="store-info">
+                            <h4 class="store-name">${store.name}</h4>
+                            <p><b>Address:</b> ${store.address}</p>
+                            <p><b>Category:</b> ${store.category}</p>
+                            <p><b>Hours:</b> ${store.hours}</p>
+                            <p><b>Distance:</b> ${store.distance.toFixed(2)} km</p>
+                        </div>
+                    </div>
+                    ${matchInfo}
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function highlightMarkersOnMap(results) {
+            // Reset all markers to default opacity
+            Object.values(markers).forEach(marker => {
+                marker.setOpacity(0.3);
+            });
+            
+            // Highlight and show only search results
+            if (results.length > 0) {
+                const bounds = [];
+                results.forEach(result => {
+                    const marker = markers[result.store.id];
+                    if (marker) {
+                        marker.setOpacity(1.0);
+                        bounds.push([result.store.lat, result.store.lng]);
+                    }
+                });
+                
+                // Fit map to show all results
+                if (bounds.length > 0 && bounds.length > 1) {
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                } else if (bounds.length === 1) {
+                    map.setView(bounds[0], 16);
+                }
+            }
+        }
+
+        function resetMapView() {
+            map.setView([53.3415, -6.2777], 15);
+            Object.values(markers).forEach(marker => {
+                marker.setOpacity(1.0);
+            });
+        }
+
+        function selectStore(storeId) {
+            const store = allStores.find(s => s.id === storeId);
+            if (!store) return;
+            
+            map.setView([store.lat, store.lng], 17);
+            
+            const marker = markers[storeId];
+            if (marker) {
+                marker.openPopup();
+            }
+            
+            document.getElementById('search-results-dropdown').classList.remove('active');
+        }
+
+        function selectStoreFromSearch(storeId) {
+            const store = storeData.find(s => s.id === storeId);
+            if (!store) return;
+            
+            // Close dropdown
+            document.getElementById('search-results-dropdown').classList.remove('active');
+            
+            // Update search input
+            document.getElementById('main-search-input').value = store.name;
+            
+            focusOnStore(storeId);
+        }
+
+        function focusOnStore(storeId) {
+        const store = allStores.find(s => s.id === storeId);
+        if (!store) return;
+        
+        // Center map on store
+        map.setView([store.lat, store.lng], 17);
+        
+        // Open popup
+        const marker = markers[storeId];
+        if (marker) {
+            marker.openPopup();
+        }
+        
+        // Highlight store card
+        document.querySelectorAll('.store-card').forEach(card => {
+            if (parseInt(card.dataset.storeId) === storeId) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                card.style.boxShadow = '0 0.5rem 1rem rgba(0, 136, 255, 0.3)';
+                setTimeout(() => {
+                    card.style.boxShadow = '';
+                }, 2000);
+            }
+        });
+    }
+
+        function showAllStoreCards() {
+            document.querySelectorAll('.store-card').forEach(card => {
+                card.style.display = 'flex';
+            });
+            document.getElementById('results-header').textContent = `Results (${allStores.length})`;
+        }
+
+        function updateSearchStatus(message) {
+            const statusElement = document.getElementById('search-status');
+            if (statusElement) {
+                statusElement.textContent = message;
+                statusElement.classList.toggle('active', message !== '');
+            }
+        }
+    </script>
+</body>
+</html>
