@@ -352,15 +352,7 @@ nav {
     box-sizing: border-box;
 }
 
-<<<<<<< HEAD
 .store-card:hover {
-=======
-.left {
-  text-align: left;
-}
-
-.shop-card:hover {
->>>>>>> main
     box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transform: translateY(-0.125rem);
 }
@@ -653,7 +645,6 @@ nav {
     color: #1E1E1E;
 }
 
-<<<<<<< HEAD
 .search-container {
     position: relative;
 }
@@ -818,8 +809,3 @@ nav {
         filter: hue-rotate(120deg) brightness(1.2);
         z-index: 1000 !important;
     }
-=======
-.optional-label {
-  color: grey;
-}
->>>>>>> main
