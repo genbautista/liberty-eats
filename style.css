@@ -1,3 +1,96 @@
+#item-add-popup {
+  color: black;
+  position: fixed;
+  top: 10vh;
+  left: 25vw;
+  height: 80vh;
+  width: 50vw;
+  background: white;
+  z-index: 25;
+  box-shadow: 0rem 0.5rem 1.5rem rgba(0, 0, 0, 0.10);
+  font-size: 1.0625rem;
+  font-family: SF Pro;
+  font-weight: 400;
+  line-height: 1.375rem;
+}
+
+#result-popup {
+  position: absolute;
+  height: 10vh;
+  width: 30vw;
+  top: 40vh;
+  left: 32vw;
+  background: white;
+  padding: 2rem;
+  border: 0.2rem solid grey;
+  z-index: 100;
+  box-shadow: 0rem 0.5rem 1.5rem rgba(0, 0, 0, 0.10);
+  color: black;
+  font-size: 1.0625rem;
+  font-family: SF Pro;
+  font-weight: 400;
+  line-height: 1.375rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#item-add-popup form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.price-input {
+  resize: horizontal;
+  width: 3em;
+}
+
+#close-item-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+#item-add-popup input {
+  color: black;
+  background: white;
+}
+
+button {
+  background: white;
+}
+
+.big-button {
+    z-index: 20;
+    padding: 0.75rem 1.25rem;
+    background: white;
+    border: 0.0625rem solid #D9D9D9;
+    border-radius: 0.5rem;
+    color: #1E1E1E;
+    font-size: 1rem;
+    font-family: Inter;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0rem 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#add-item {
+    position: fixed;
+    bottom: 0.5rem;
+    left: 30rem;
+}
+
+.leaflet-container {
+    width: calc(100vw - 29rem);
+    height: calc(100vh - 4.5rem);
+    left: 29rem
+}
+
 .header {
     width: 31.5rem;        
     height: 6.625rem;      
@@ -259,7 +352,15 @@ nav {
     box-sizing: border-box;
 }
 
+<<<<<<< HEAD
 .store-card:hover {
+=======
+.left {
+  text-align: left;
+}
+
+.shop-card:hover {
+>>>>>>> main
     box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transform: translateY(-0.125rem);
 }
@@ -502,18 +603,6 @@ nav {
     position: fixed;
     top: 5.5rem;
     right: 1.375rem;
-    z-index: 20;
-    padding: 0.75rem 1.25rem;
-    background: white;
-    border: 0.0625rem solid #D9D9D9;
-    border-radius: 0.5rem;
-    color: #1E1E1E;
-    font-size: 1rem;
-    font-family: Inter;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0rem 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
 }
 
 .toggle-filters-btn:hover {
@@ -564,6 +653,7 @@ nav {
     color: #1E1E1E;
 }
 
+<<<<<<< HEAD
 .search-container {
     position: relative;
 }
@@ -728,3 +818,8 @@ nav {
         filter: hue-rotate(120deg) brightness(1.2);
         z-index: 1000 !important;
     }
+=======
+.optional-label {
+  color: grey;
+}
+>>>>>>> main
