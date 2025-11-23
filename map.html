@@ -259,7 +259,6 @@
             }).addTo(map);
             
             initializeUIHandlers();
-            locateUser();
 
             await loadStoresFromAPI();
             clearAllMarkers();
@@ -347,7 +346,7 @@
             });
         }
 
-       async function performSearch(query) {
+        async function performSearch(query) {
             if (!query || query.trim().length < 2) {
                 displayStoreCards(allStores);
                 resetMapView();
@@ -686,7 +685,7 @@
                         id: store.storeID,
                         name: store.storeName,
                         address: store.address,
-                        category: store.type && store.type.length > 0 ? store.type[0].typeName : 'General',
+                        category: store.type,
                         lat: parseFloat(store.latitude),
                         lng: parseFloat(store.longitude),
                         hours: formatHours(store.hours),
@@ -703,8 +702,9 @@
                     // Load inventory for this store
                     try {
                         console.log(`Fetching inventory for store ${formattedStore.id}`);
-                        const invResponse = await fetch(`${API_BASE_URL}/items?store=${formattedStore.id}`);
+                        const invResponse = await fetch(`${API_BASE_URL}/items?storeID=${formattedStore.id}`);
                         console.log(`Inventory response status for store ${formattedStore.id}:`, invResponse.status);
+                        console.log(invResponse)
                         
                         if (invResponse.ok) {
                             const inventoryData = await invResponse.json();
@@ -744,66 +744,6 @@
             }
         }
 
-        function locateUser(){
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const userLat = position.coords.latitude;
-                        const userLng = position.coords.longitude;
-                        
-                        // Update center coordinates to user's location
-                        centerCoordinates[0] = userLat;
-                        centerCoordinates[1] = userLng;
-                        
-                        // Remove existing user marker if it exists
-                        if (userMarker) {
-                            map.removeLayer(userMarker);
-                        }
-                        
-                        // Add user location marker at real position
-                        userMarker = L.marker([userLat, userLng], {
-                            icon: L.icon({
-                                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                                iconSize: [25, 41],
-                                iconAnchor: [12, 41],
-                                popupAnchor: [1, -34],
-                                shadowSize: [41, 41]
-                            })
-                        }).addTo(map);
-                        userMarker.bindPopup("You are here (Live Location)").openPopup();
-                        
-                        // Center map on user's location
-                        map.setView([userLat, userLng], 14);
-                        
-                        // Recalculate distances for all stores
-                        if (allStores.length > 0) {
-                            allStores.forEach(store => {
-                                store.distance = calculateDistance(userLat, userLng, store.lat, store.lng);
-                            });
-                            // Re-display store cards with updated distances
-                            displayStoreCards(allStores);
-                        }
-                        
-                        console.log('Geolocation successful:', userLat, userLng);
-                    },
-                    function(error) {
-                        console.log('Geolocation failed, using default location:', error);
-                        // Keep the default Dublin location
-                        addDefaultUserMarker();
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                console.log('Geolocation not supported by browser');
-                addDefaultUserMarker();
-            }
-        }
-       
         function updateStoreCardsForSearch(results) {
             const container = document.getElementById('store-cards-container');
             const resultsHeader = document.getElementById('results-header');
