@@ -3,8 +3,8 @@ import './App.css'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet";
 
-const url = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
-//const url = "http://localhost:8787" //testing URL
+const URL = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
+//const URL = "http://localhost:8787" //testing URL
 const DAYS_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
 
@@ -31,6 +31,21 @@ function App() {
 		fetch(url + "/stores").then(res => res.json()).then((json) => setMatchingStores(json))
 	}
 	
+	//TODO: click outside to close dropdown
+	
+	const searchItem = (event) => {
+		let query = event.target.value
+		if (query.length === 0) {
+			// deactivate dropdown
+		}
+		if (query.length >= 2) {
+			query = query.toLowerCase.trim()
+			
+			const response = await fetch(`${URL}/items?name=${query}`)
+			setMatchingStores({})
+		}
+	}
+	
 	const submitItem = (e) => {
 		// Prevent the browser from reloading the page
 		e.preventDefault();
@@ -39,7 +54,6 @@ function App() {
 		const form = e.target;
 		const formData = new FormData(form);
 
-		// Or you can work with it as a plain object:
 		let formJson = Object.fromEntries(formData.entries());
 		
 		if (formJson.euros == "") {
@@ -153,7 +167,7 @@ function App() {
 		}
 	}
 
-  const setScrollPosition = (storeID) => {
+  	const setScrollPosition = (storeID) => {
 		document.getElementById("store-" + storeID).scrollIntoView({behavior: "smooth", block:"center"})
 	}
 	
@@ -248,48 +262,95 @@ function App() {
 		</div>
 
 		<div class="search-container">
-		    <input type="text" class="search-input" placeholder="🔍 Search"></input>
+		    <input 
+		        type="text" 
+		        class="search-input" 
+		        id="main-search-input"
+		        placeholder="🔍 Search stores or items..."
+		        autocomplete="off"
+		        onChange={searchItem}
+		    ></input>
+		    <div class="search-results-dropdown" id="search-results-dropdown"></div>
 		</div>
 
-		<section class="filter-section">
-		    <h3 class="section-header">Inventory Type</h3>
+		 <section class="filter-section">
+		    <h3 class="section-header">Categories</h3>
 		    
-		    <button class="filter-item">
+		    <button class="filter-item category-filter" data-category="Produce">
 		        <span class="filter-icon">🍎</span>
-		        <span class="filter-label">Fruit & Veg</span>
-		        <span class="filter-detail">Expand</span>
+		        <span class="filter-label">Produce</span>
 		    </button>
 
-		    <button class="filter-item filter-item-selected">
+		    <button class="filter-item category-filter" data-category="Dairy">
+		        <span class="filter-icon">🥛</span>
+		        <span class="filter-label">Dairy</span>
+		    </button>
+
+		    <button class="filter-item category-filter" data-category="Meat">
 		        <span class="filter-icon">🥩</span>
-		        <span class="filter-label">Butcher</span>
-		        <span class="filter-detail">Expand ›</span>
+		        <span class="filter-label">Meat</span>
 		    </button>
 
-		    <button class="filter-item filter-item-nested">
-		        <span class="filter-icon">🍗</span>
-		        <span class="filter-label">Chicken</span>
-		    </button>
-
-		    <button class="filter-item">
+		    <button class="filter-item category-filter">
 		        <span class="filter-icon">👕</span>
 		        <span class="filter-label">Clothing</span>
 		    </button>
 		</section>
 
 		<section class="filter-section">
+		    <h3 class="section-header">Store Types</h3>
+		    
+		    <button class="filter-item type-filter" data-type="Grocery">
+		        <span class="filter-icon">🛒</span>
+		        <span class="filter-label">Grocery</span>
+		    </button>
+
+		    <button class="filter-item type-filter" data-type="Restaurant">
+		        <span class="filter-icon">🍽️</span>
+		        <span class="filter-label">Restaurant</span>
+		    </button>
+
+		    <button class="filter-item type-filter" data-type="Pub">
+		        <span class="filter-icon">🍺</span>
+		        <span class="filter-label">Pub</span>
+		    </button>
+
+		    <button class="filter-item type-filter" data-type="Hardware">
+		        <span class="filter-icon">🔨</span>
+		        <span class="filter-label">Hardware</span>
+		    </button>
+
+		    <button class="filter-item type-filter" data-type="Home Goods">
+		        <span class="filter-icon">🏠</span>
+		        <span class="filter-label">Home Goods</span>
+		    </button>
+
+		</section>
+		
+		<section class="filter-section">
 		    <h3 class="section-header">Distance</h3>
 		    
-		    <button class="filter-item">
+		    <button class="filter-item distance-filter active" data-distance="all">
+		        <span class="filter-icon">📍</span>
+		        <span class="filter-label">All</span>
+		    </button>
+
+		    <button class="filter-item distance-filter" data-distance="1">
+		        <span class="filter-icon">📍</span>
+		        <span class="filter-label">1km</span>
+		    </button>
+
+		    <button class="filter-item distance-filter" data-distance="2">
 		        <span class="filter-icon">📍</span>
 		        <span class="filter-label">2km</span>
 		    </button>
 
-		    <button class="filter-item">
+		    <button class="filter-item distance-filter" data-distance="5">
 		        <span class="filter-icon">📍</span>
 		        <span class="filter-label">5km</span>
 		    </button>
 		</section>
+
 
 		{ /* Results section with shop cards */ }
 		<div class="results-section">
