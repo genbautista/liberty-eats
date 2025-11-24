@@ -9,7 +9,7 @@
   z-index: 25;
   box-shadow: 0rem 0.5rem 1.5rem rgba(0, 0, 0, 0.10);
   font-size: 1.0625rem;
-  font-family: SF Pro;
+  font-family: system-ui;
   font-weight: 400;
   line-height: 1.375rem;
 }
@@ -27,7 +27,7 @@
   box-shadow: 0rem 0.5rem 1.5rem rgba(0, 0, 0, 0.10);
   color: black;
   font-size: 1.0625rem;
-  font-family: SF Pro;
+  font-family: system-ui;
   font-weight: 400;
   line-height: 1.375rem;
   display: flex;
@@ -72,7 +72,7 @@ button {
     border-radius: 0.5rem;
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0rem 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
@@ -103,7 +103,7 @@ button {
     flex-direction: column;
     color: black;
     font-size: 3.125rem;   
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 900;
     line-height: 3.125rem;
     word-wrap: break-word;
@@ -141,7 +141,7 @@ nav {
     position: absolute;
     color: black;
     font-size: 1.25rem;    
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 500;
     line-height: 1.25rem;  
     word-wrap: break-word;
@@ -201,9 +201,9 @@ nav {
 }
 
 .filters-title {
-    color: #333333;
+    color: #708C44;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.375rem;
     margin: 0;
@@ -216,7 +216,7 @@ nav {
     border: none;
     color: #333333;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 510;
     cursor: pointer;
     padding: 0;
@@ -236,7 +236,7 @@ nav {
     border: none;
     color: #999999;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.375rem;
     box-sizing: border-box;
@@ -255,9 +255,9 @@ nav {
 
 .section-header {
     padding: 0.125rem 0.75rem 0.625rem 0;
-    color: rgba(60, 60, 67, 0.60);
+    color: #708C44;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.375rem;
     margin: 0;
@@ -299,7 +299,7 @@ nav {
     width: 2.125rem;
     text-align: center;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     line-height: 1.375rem;
 }
 
@@ -307,7 +307,7 @@ nav {
     flex: 1;
     color: black;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.375rem;
 }
@@ -316,7 +316,7 @@ nav {
     text-align: right;
     color: #999999;
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.375rem;
 }
@@ -333,7 +333,7 @@ nav {
     padding: 0.125rem 0.75rem 0.625rem 0.75rem;
     color: rgba(60, 60, 67, 0.60);
     font-size: 1.0625rem;
-    font-family: SF Pro;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.375rem;
     margin: 0;
@@ -359,6 +359,7 @@ nav {
 }
 
 .shop-card:hover {
+    background: rgba(0,0,0,0.1);
     box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transform: translateY(-0.125rem);
 }
@@ -381,12 +382,13 @@ nav {
     flex-direction: column;
     gap: 0.25rem;
     display: flex;
+    font-family: system-ui;
 }
 
 .shop-name {
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 700;
     line-height: 1.4rem;
     margin: 0;
@@ -395,7 +397,7 @@ nav {
 .shop-price {
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 600;
     line-height: 1.4rem;
     margin: 0;
@@ -410,6 +412,33 @@ nav {
 
 .shop-info b {
     color: #1E1E1E;
+}
+
+.shop-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.shop-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.shop-card:hover::after {
+    left: 150%;
 }
 
 .advanced-filters {
@@ -438,7 +467,7 @@ nav {
 .filter-label-text {
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.4rem;
     display: block;
@@ -459,7 +488,7 @@ nav {
     gap: 0.5rem;
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1rem;
 }
@@ -507,7 +536,7 @@ nav {
 .checkbox-label {
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.4rem;
 }
@@ -515,7 +544,7 @@ nav {
 .checkbox-description {
     color: #757575;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.4rem;
 }
@@ -540,7 +569,7 @@ nav {
 .checkbox-item-simple span {
     color: #1E1E1E;
     font-size: 1rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.4rem;
 }
@@ -561,7 +590,7 @@ nav {
     text-align: right;
     color: #1E1E1E;
     font-size: 0.875rem;
-    font-family: Inter;
+    font-family: system-ui;
     font-weight: 400;
     line-height: 1.225rem;
 }
