@@ -50,7 +50,6 @@ function App() {
 	const searchHandler = (event) => {
 		if (event.target.value.length === 0) {
 			setSearchResultsVisible(false)
-			return
 		}
 		if (event.key == "Enter") {
 			searchItem()
@@ -230,20 +229,26 @@ function App() {
 	}
 
 
-	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [20,20]})
+	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [40,40]})
 
 	return (
 	<>
-	    <nav>
-		<a href="./index.html">
-		    <div class="navbar-item" style={{width: "25.454rem", height: "2.769rem", left: "3.125rem", position: "absolute", top: "0.6rem", display: "flex", alignItems: "center", color: "black", fontSize: "3.125rem", fontFamily: "Inter", fontStyle: "italic", fontWeight: "800", textShadow: "0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25)"}}>Liberties Shops</div>
-		</a>
-	    </nav>
+		<img 
+		src="./src/assets/LibertiesShopsLogo.png"
+		class="navbar-item"
+		style={{
+			width: "12rem",
+			height: "auto",
+			left: "2rem",
+			position: "absolute",
+			top: "0rem"
+		}}
+		/>
 
 	    { /* Dropdown toggle button for advanced filters */ }
 	    <button id="toggle-filters-btn" class="toggle-filters-btn big-button">
 		<span>⚙️ Filters</span>
-	    </button>matchingStores
+	    </button>
 	    
 	    <button id="add-item" class="big-button" onClick={() => {setAddingItem(true)}}>Add Item</button>
 	    { (resultPopupText != "")&& <div id="result-popup">
@@ -314,19 +319,17 @@ function App() {
 		</div>
 
 		<div class="search-container">
-		    <div>
-			    <input 
-				type="text" 
-				class="search-input" 
-				id="main-search-input"
-				placeholder="🔍 Search stores or items..."
-				autocomplete="off"
-				onKeyPress={searchHandler}
-				onChange={searchHandler}
-				ref={searchInput}
-			    ></input>
-			    <button class="search-button" onClick={searchItem}>🔍</button>
-		    </div>
+		    <input 
+			type="text" 
+			class="search-input" 
+			id="main-search-input"
+			placeholder="🔍 Search stores or items..."
+			autocomplete="off"
+			onKeyPress={searchHandler}
+			onChange={searchHandler}
+			ref={searchInput}
+		    ></input>
+		    <button class="search-button" onClick={searchItem}>🔍</button>
 		    {searchResultsVisible && <div class="search-results-dropdown active" id="search-results-dropdown">
 		    	{(Object.keys(matchingStores).length === 0) && <div class="no-results">
 				No stores found with that item
