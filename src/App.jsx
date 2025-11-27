@@ -170,13 +170,13 @@ function App() {
 		fetchAllCategories();
 	}, []);
 
-	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [40,40]})
+	const userIcon = new L.Icon({iconUrl: "https://github.com/genbautista/liberty-eats/blob/main/src/assets/user.png", iconSize: [40,40]})
 
 	/* HTML GOES BELOW */
 	return (
 	<>
 		<img 
-		src="./src/assets/LibertiesShopsLogo.png"
+		src="https://github.com/genbautista/liberty-eats/blob/main/src/assets/LibertiesShopsLogo.png"
 		class="navbar-item"
 		style={{
 			width: "12rem",
