@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import './App.css'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet";
@@ -6,7 +6,6 @@ import * as L from "leaflet";
 const URL = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
 //const URL = "http://localhost:8787" //testing URL
 const DAYS_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-
 
 function App() {
 	//useState means that React will automatically rerender parts of the page they're used in when they update, as long as they're updated with the function returned as the second paramter of useState
@@ -16,33 +15,75 @@ function App() {
 	const [addingItem, setAddingItem] = useState(false)
 	const [resultPopupText, setResultPopupText] = useState("")
 	const [locationOn, setLocationOn] = useState(false)
+	const [searchResultsVisible, setSearchResultsVisible] = useState(false)
 	const [userLat, setUserLat] = useState(0.1)
 	const [userLong, setUserLong] = useState(0.1)
 	const [expandedHours, setExpandedHours] = useState(-1)
+	const [mapPos, setMapPos] = useState([53.3415,-6.2777]) //lat, long
+	const [mapZoom, setMapZoom] = useState(15)
+	const markerRefs = useRef([]);
+	const searchInput = useRef(0);
+	const map = useRef(null);
 
 	const fetchAllCategories = () => {
-		fetch(url + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
+		fetch(URL + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
 	}
 	const fetchAllStores = () => {
-		fetch(url + "/stores").then(res => res.json()).then((json) => setAllStores(json))
+		fetch(URL + "/stores").then(res => res.json()).then((json) => setAllStores(json))
 	}
 	
 	const fetchStores = () => {
-		fetch(url + "/stores").then(res => res.json()).then((json) => setMatchingStores(json))
+		fetch(URL + "/stores").then(res => res.json()).then((json) => setMatchingStores(json))
 	}
 	
-	//TODO: click outside to close dropdown
+	const focusStore = (storeID) => {
+		setScrollPosition(storeID)
+		setMapPos([allStores[storeID].latitude, allStores[storeID].longitude])
+		setMapZoom(17)
+		markerRefs.current[storeID].openPopup();
+	}
+	
+	const handleGlobalClick = (event) => {
+		setSearchResultsVisible(false)
+	}
+	
+	const searchHandler = (event) => {
+		if (event.target.value.length === 0) {
+			setSearchResultsVisible(false)
+			return
+		}
+		if (event.key == "Enter") {
+			searchItem()
+		}
+	}
 	
 	const searchItem = (event) => {
-		let query = event.target.value
-		if (query.length === 0) {
-			// deactivate dropdown
-		}
-		if (query.length >= 2) {
-			query = query.toLowerCase.trim()
+		let query = searchInput.current.value
+		
+		setTimeout(() => setSearchResultsVisible(true), 100)
+		query = query.toLowerCase().trim()
 			
-			const response = await fetch(`${URL}/items?name=${query}`)
-			setMatchingStores({})
+		//Find stores with matching names
+		fetch(URL + "/stores?store=" + query).then((res) => res.json()).then((json) => {
+			let list = {}
+			for (let id of Object.keys(json)) {
+				list[id] = json[id]
+			}
+			return list
+		}).then((list) => {
+		
+		//Find stores with items with matching names
+		fetch(URL + "/stores?item=" + query).then((res) => res.json()).then((json) => {
+			for (let id of Object.keys(json)) {
+				list[id] = json[id]
+			}
+			setMatchingStores(list)
+		})
+		
+		})
+		
+		if (event != undefined) {
+			event.preventDefault();
 		}
 	}
 	
@@ -61,7 +102,7 @@ function App() {
 		}
 		
 		formJson = {"itemName":formJson.itemName, "price":Number(formJson.euros + "." + formJson.cents), "storeID":Number(formJson.storeID),"categoryID":Number(formJson.categoryID)}
-		fetch(url + "/items", {
+		fetch(URL + "/items", {
 			method: "POST",
 			body: JSON.stringify(formJson),
 			headers: {"Content-Type":"application/json; charset=UTF-8"}
@@ -177,7 +218,17 @@ function App() {
 		locationSetup();
 		fetchAllStores();
 		fetchAllCategories();
+		window.addEventListener("click",handleGlobalClick)
 	}, []);
+	
+	const RecenterAutomatically = ({lat,lng,zoom}) => {
+	 const map = useMap();
+	  useEffect(() => {
+	    map.setView([lat, lng], zoom);
+	  }, [lat, lng, zoom]);
+	  return null;
+	}
+
 
 	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [20,20]})
 
@@ -237,7 +288,7 @@ function App() {
 	    
 	    { /* Map Container */ }
 	    <div id="map">
-		<MapContainer center={[53.3415, -6.2777]} zoom={15} scrollWheelZoom={true}>
+		<MapContainer center={mapPos} zoom={mapZoom} scrollWheelZoom={true} ref={map}>
 			<TileLayer
 			attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -246,12 +297,13 @@ function App() {
 			</Marker>
 			}
 		    	{Object.keys(matchingStores).map((storeID) => (
-				<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}}>
-					<Popup>
-					  {matchingStores[storeID].storeName}
-					</Popup>
-				</Marker>
+					<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}} ref={(element) => markerRefs.current[storeID] = element}>
+						<Popup>
+						  {matchingStores[storeID].storeName}
+						</Popup>
+					</Marker>
 			))}
+			<RecenterAutomatically lat={mapPos[0]} lng={mapPos[1]} zoom={mapZoom}/>
 		</MapContainer>
 	    </div>
 
@@ -262,15 +314,33 @@ function App() {
 		</div>
 
 		<div class="search-container">
-		    <input 
-		        type="text" 
-		        class="search-input" 
-		        id="main-search-input"
-		        placeholder="🔍 Search stores or items..."
-		        autocomplete="off"
-		        onChange={searchItem}
-		    ></input>
-		    <div class="search-results-dropdown" id="search-results-dropdown"></div>
+		    <div>
+			    <input 
+				type="text" 
+				class="search-input" 
+				id="main-search-input"
+				placeholder="🔍 Search stores or items..."
+				autocomplete="off"
+				onKeyPress={searchHandler}
+				onChange={searchHandler}
+				ref={searchInput}
+			    ></input>
+			    <button class="search-button" onClick={searchItem}>🔍</button>
+		    </div>
+		    {searchResultsVisible && <div class="search-results-dropdown active" id="search-results-dropdown">
+		    	{(Object.keys(matchingStores).length === 0) && <div class="no-results">
+				No stores found with that item
+		    	</div>
+		    	}
+		    	{Object.keys(matchingStores).map((storeID) => (
+		            <div class="search-result-item" onClick={() => focusStore(storeID)}>
+		                <div class="search-result-name">{matchingStores[storeID].storeName}</div>
+		                <div class="search-result-details">
+		                    {matchingStores[storeID].address} • {locationOn ? (computeDistance(matchingStores[storeID].latitude,matchingStores[storeID].longitude) + "km away") : ""}
+		                </div>
+		                <div class="search-result-match">ITEMS</div>
+		            </div>))}
+		    </div>}
 		</div>
 
 		 <section class="filter-section">
