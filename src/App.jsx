@@ -338,7 +338,7 @@ function App() {
 		                <div class="search-result-details">
 		                    {matchingStores[storeID].address} • {locationOn ? (computeDistance(matchingStores[storeID].latitude,matchingStores[storeID].longitude) + "km away") : ""}
 		                </div>
-		                <div class="search-result-match">ITEMS</div>
+		                <div class="search-result-match"></div>
 		            </div>))}
 		    </div>}
 		</div>
