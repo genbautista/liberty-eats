@@ -1,13 +1,18 @@
-# React + Vite
+# Setup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+After cloning the repo, run the following command from within the main folder:
 
-Currently, two official plugins are available:
+```
+npm install
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+After that, a local instance can be run with this command:
+```
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Most development code is in the src folder, with App.jsx holding the HTML and JS code for the main page (as a React file) and style.css holding the style sheet for the whole page.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# liberty-eats
+There should not be reason to touch main.jsx; it just wraps App.jsx. 
+
+index.html should usually go untouched unless you're making structural changes. It also wraps App.jsx but is responsible for being the url where App.jsx can be found and setting page metadata, as well as linking in the style sheets and external modules.
