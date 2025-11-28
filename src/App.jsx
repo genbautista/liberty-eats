@@ -13,6 +13,8 @@ function App() {
 	const [allStores, setAllStores] = useState({})
 	const [allCategories, setAllCategories] = useState({})
 	const [allTypes, setAllTypes] = useState({})
+	const [inventories, setInventories] = useState({})
+	const [matchingItems, setMatchingItems] = useState({})
 	const [addingItem, setAddingItem] = useState(false)
 	const [resultPopupText, setResultPopupText] = useState("")
 	const [locationOn, setLocationOn] = useState(false)
@@ -27,17 +29,52 @@ function App() {
 	const markerRefs = useRef([]);
 	const searchInput = useRef(0);
 	const map = useRef(null);
-
+	
 	const fetchAllCategories = () => {
 		fetch(URL + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
 		fetch(URL + "/types").then(res => res.json()).then((json) => setAllTypes(json))
 	}
+	
 	const fetchAllStores = () => {
 		fetch(URL + "/stores").then(res => res.json()).then((json) => setAllStores(json))
 	}
 	
-	const fetchStores = () => {
-		fetch(URL + "/stores").then(res => res.json()).then((json) => setMatchingStores(json))
+	const buildQuery = () => {
+		let query = searchInput.current.value
+		query = query.toLowerCase().trim()
+		
+		let filters = ""
+		for (let x of selectedCategories) {
+			filters += "&categoryID=" + x
+		}
+		for (let x of selectedTypes) {
+			filters += "&typeID=" + x
+		}
+		return {query: query, filters: filters}
+	}
+	
+	const fetchStoreInventory = (storeID) => {
+		let {query, filters} = buildQuery()
+		fetch(URL + "/items?storeID=" + storeID + (matchingStores[storeID].storeNameMatched ? "" : ("&item=" + query)) + filters).then((res) => res.json()).then((json) => {
+			setInventory(json, storeID)
+		})
+	}
+	
+	const toggleShowInventory = (storeID) => {
+		if (inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) {
+			fetchStoreInventory(storeID)
+		} else {
+			setInventory({},storeID)
+		}
+	}
+
+	const setInventory = (itemDict, storeID) => {
+		let dict = {}
+		for (let id in inventories) {
+			dict[id] = inventories[id]
+		}
+		dict[storeID] = itemDict
+		setInventories(dict)
 	}
 	
 	const focusStore = (storeID) => {
@@ -46,6 +83,7 @@ function App() {
 		setMapZoom(17)
 		markerRefs.current[storeID].openPopup();
 	}
+
 	
 	const handleGlobalClick = (event) => {
 		setSearchResultsVisible(false)
@@ -61,33 +99,27 @@ function App() {
 	}
 	
 	const searchItem = (event, showResults) => {
-		let query = searchInput.current.value
-		
 		if (showResults) {
 			setTimeout(() => setSearchResultsVisible(true), 100)
 		}
-		query = query.toLowerCase().trim()
 		
-		for (let x of selectedCategories) {
-			query += "&categoryID=" + x
-		}
-		for (let x of selectedTypes) {
-			query += "&typeID=" + x
-		}
+		let {query, filters} = buildQuery()
 			
 		//Find stores with matching names
-		fetch(URL + "/stores?store=" + query).then((res) => res.json()).then((json) => {
+		fetch(URL + "/stores?store=" + query + filters).then((res) => res.json()).then((json) => {
 			let list = {}
 			for (let id of Object.keys(json)) {
 				list[id] = json[id]
+				list[id].storeNameMatched = true
 			}
 			return list
 		}).then((list) => {
 		
 		//Find stores with items with matching names
-		fetch(URL + "/stores?item=" + query).then((res) => res.json()).then((json) => {
+		fetch(URL + "/stores?item=" + query + filters).then((res) => res.json()).then((json) => {
 			for (let id of Object.keys(json)) {
 				list[id] = json[id]
+				list[id].storeNameMatched = false
 			}
 			setMatchingStores(list)
 		})
@@ -258,11 +290,11 @@ function App() {
 	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
 	useEffect(() => {
-		fetchStores();
 		locationSetup();
 		fetchAllStores();
 		fetchAllCategories();
 		window.addEventListener("click",handleGlobalClick)
+		searchItem(undefined, false)
 	}, []);
 	
 	useEffect(() => {
@@ -380,7 +412,7 @@ function App() {
 			onChange={searchHandler}
 			ref={searchInput}
 		    ></input>
-		    <button class="search-button" onClick={(event) => searchItem(event, true)}>🔍</button>
+		    <button class="search-button big-button" onClick={(event) => searchItem(event, true)}>🔍</button>
 		    {searchResultsVisible && <div class="search-results-dropdown active" id="search-results-dropdown">
 		    	{(Object.keys(matchingStores).length === 0) && <div class="no-results">
 				No stores found with that item
@@ -429,7 +461,7 @@ function App() {
 				    <div class="shop-info left">
 				        <h3 class="shop-name">{matchingStores[storeID].storeName}</h3>
 				        <p class="shop-description">{matchingStores[storeID].description}</p>
-				<p>{matchingStores[storeID].website}</p>
+					<p>{matchingStores[storeID].website}</p>
 				    </div>
 				    <div class="shop-info">
 				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
@@ -441,6 +473,20 @@ function App() {
 				        	))}
 				        </div>}
 				    </div>
+				</div>
+				<button class="small-button" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
+				<div class="inventory-panel">
+				{(inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) ? "" : (Object.keys(inventories[storeID]).map((itemID) => (
+				<div class="item-card">
+					<div class="item-info left">
+					<p>{inventories[storeID][itemID].itemName}</p>
+					</div>
+					<div class="item-info">
+					{(inventories[storeID][itemID].price != 0) ? (<p> €{inventories[storeID][itemID].price} </p>) : ""}
+					</div>
+				</div>
+				))
+				)}
 				</div>
 			    </div>
 		    ))}
