@@ -253,7 +253,7 @@ function App() {
 	}
 
   	const setScrollPosition = (storeID) => {
-		document.getElementById("store-" + storeID).scrollIntoView({behavior: "smooth", block:"center"})
+		document.getElementById("store-" + storeID).getElementsByClassName("shop-name")[0].scrollIntoView({behavior: "smooth", block:"center"})
 	}
 	
 	const toggleCategory = (categoryID) => {
@@ -316,7 +316,7 @@ function App() {
 	<>
 		<img 
 		src="./src/assets/LibertiesShopsLogo.png"
-		class="navbar-item"
+		className="navbar-item"
 		style={{
 			width: "12rem",
 			height: "auto",
@@ -328,12 +328,12 @@ function App() {
 
 	    { /* Dropdown toggle button for advanced filters */ }
 	    {/*
-	    <button id="toggle-filters-btn" class="toggle-filters-btn big-button">
+	    <button id="toggle-filters-btn" className="toggle-filters-btn big-button">
 		<span>⚙️ Filters</span>
 	    </button>
 	    */}
 	    
-	    <button id="add-item" class="big-button" onClick={() => {setAddingItem(true)}}>Add Item</button>
+	    <button id="add-item" className="big-button" onClick={() => {setAddingItem(true)}}>Add Item</button>
 	    { (resultPopupText != "")&& <div id="result-popup">
 	    	<span>{resultPopupText}</span>
 	    	<button onClick={() => {setResultPopupText("")}}>OK</button>
@@ -347,17 +347,17 @@ function App() {
 			    	<input id="item-name-input" name="itemName"></input>
 		    	</div>
 		    	<div>
-		    		<label class="optional-label">optional--can be left blank</label><br></br>
+		    		<label className="optional-label">optional--can be left blank</label><br></br>
 			    	<label for="price-input">Price: € </label>
-			    	<input id="price-euros-input" class="price-input" placeholder={"0"} name="euros"></input>
+			    	<input id="price-euros-input" className="price-input" placeholder={"0"} name="euros"></input>
 			    	<span> . </span>
-			    	<input id="price-cents-input"  class="price-input" maxLength={2} placeholder={"00"} name="cents"></input>
+			    	<input id="price-cents-input"  className="price-input" maxLength={2} placeholder={"00"} name="cents"></input>
 		    	</div>
 		    	<div>
 			    	<label for="price-input">Store: </label>
 			    	<select id="store-input" name="storeID">
 			    		{Object.keys(allStores).map((storeID) => (
-			    			<option value={storeID}>{allStores[storeID].storeName}</option>
+			    			<option key={storeID} value={storeID}>{allStores[storeID].storeName}</option>
 			    		))}
 			    	</select>
 		    	</div>
@@ -365,11 +365,11 @@ function App() {
 			    	<label for="category-input">Category: </label>
 			    	<select id="category-input" name="categoryID">
 			    		{Object.keys(allCategories).map((categoryID) => (
-			    			<option value={categoryID}>{allCategories[categoryID].categoryName}</option>
+			    			<option key={categoryID} value={categoryID}>{allCategories[categoryID].categoryName}</option>
 			    		))}
 			    	</select>
 		    	</div>
-		    	<button type="submit" id="submit-item" class="big-button">SUBMIT</button>
+		    	<button type="submit" id="submit-item" className="big-button">SUBMIT</button>
 	    	</form>
 	    </div>
 	    }
@@ -385,7 +385,7 @@ function App() {
 			</Marker>
 			}
 		    	{Object.keys(matchingStores).map((storeID) => (
-					<Marker position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}} ref={(element) => markerRefs.current[storeID] = element}>
+					<Marker key={storeID} position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}} ref={(element) => markerRefs.current[storeID] = element}>
 						<Popup>
 						  {matchingStores[storeID].storeName}
 						</Popup>
@@ -395,93 +395,93 @@ function App() {
 		</MapContainer>
 	    </div>
 
-	    <div class="filters-sidebar">
-		<div class="filters-header">
-		    <h2 class="filters-title">Filters & Results</h2>
-		    <button class="filters-edit-btn">⋯</button>
+	    <div className="filters-sidebar">
+		<div className="filters-header">
+		    <h2 className="filters-title">Filters & Results</h2>
+		    <button className="filters-edit-btn">⋯</button>
 		</div>
 
-		<div class="search-container">
+		<div className="search-container">
 		    <input 
 			type="text" 
-			class="search-input" 
+			className="search-input" 
 			id="main-search-input"
 			placeholder="🔍 Search stores or items..."
-			autocomplete="off"
+			autoComplete="off"
 			onKeyPress={searchHandler}
 			onChange={searchHandler}
 			ref={searchInput}
 		    ></input>
-		    <button class="search-button big-button" onClick={(event) => searchItem(event, true)}>🔍</button>
-		    {searchResultsVisible && <div class="search-results-dropdown active" id="search-results-dropdown">
-		    	{(Object.keys(matchingStores).length === 0) && <div class="no-results">
+		    <button className="search-button big-button" onClick={(event) => searchItem(event, true)}>🔍</button>
+		    {searchResultsVisible && <div className="search-results-dropdown active" id="search-results-dropdown">
+		    	{(Object.keys(matchingStores).length === 0) && <div className="no-results">
 				No stores found with that item
 		    	</div>
 		    	}
 		    	{Object.keys(matchingStores).map((storeID) => (
-		            <div class="search-result-item" onClick={() => focusStore(storeID)}>
-		                <div class="search-result-name">{matchingStores[storeID].storeName}</div>
-		                <div class="search-result-details">
+		            <div key={storeID} className="search-result-item" onClick={() => focusStore(storeID)}>
+		                <div className="search-result-name">{matchingStores[storeID].storeName}</div>
+		                <div className="search-result-details">
 		                    {matchingStores[storeID].address} • {locationOn ? (computeDistance(matchingStores[storeID].latitude,matchingStores[storeID].longitude) + "km away") : ""}
 		                </div>
-		                <div class="search-result-match"></div>
+		                <div className="search-result-match"></div>
 		            </div>))}
 		    </div>}
 		</div>
 
-		 <section class="filter-section">
-		    <h3 class="section-header">Categories</h3>
+		 <section className="filter-section">
+		    <h3 className="section-header">Categories</h3>
 		    
 		    {Object.keys(allCategories).map((categoryID) => (
-		    <button class={"filter-item type-filter" + ((selectedCategories.includes(categoryID)) ? " filter-item-selected" : "")} data-category={allCategories[categoryID].categoryName} onClick={() => toggleCategory(categoryID)}>
-		        <span class="filter-icon">{allCategories[categoryID].categorySymbol}</span>
-		        <span class="filter-label">{allCategories[categoryID].categoryName}</span>
+		    <button key={categoryID} className={"filter-item type-filter" + ((selectedCategories.includes(categoryID)) ? " filter-item-selected" : "")} data-category={allCategories[categoryID].categoryName} onClick={() => toggleCategory(categoryID)}>
+		        <span className="filter-icon">{allCategories[categoryID].categorySymbol}</span>
+		        <span className="filter-label">{allCategories[categoryID].categoryName}</span>
 		    </button>
 		    ))}
 		</section>
 
-		<section class="filter-section">
-		    <h3 class="section-header">Store Types</h3>
+		<section className="filter-section">
+		    <h3 className="section-header">Store Types</h3>
 		    
 		    {Object.keys(allTypes).map((typeID) => (
-		    <button key={typeID} class={"filter-item type-filter" + ((selectedTypes.includes(typeID)) ? " filter-item-selected" : "")} data-category={allTypes[typeID].typeName} onClick={() => toggleType(typeID)}>
-		        <span class="filter-icon">{allTypes[typeID].typeSymbol}</span>
-		        <span class="filter-label">{allTypes[typeID].typeName}</span>
+		    <button key={typeID} className={"filter-item type-filter" + ((selectedTypes.includes(typeID)) ? " filter-item-selected" : "")} data-category={allTypes[typeID].typeName} onClick={() => toggleType(typeID)}>
+		        <span className="filter-icon">{allTypes[typeID].typeSymbol}</span>
+		        <span className="filter-label">{allTypes[typeID].typeName}</span>
 		    </button>
 		    ))}
 		</section>
 
 		{ /* Results section with shop cards */ }
-		<div class="results-section">
-		    <h3 class="results-header">Results ({Object.keys(matchingStores).length})</h3>
+		<div className="results-section">
+		    <h3 className="results-header">Results ({Object.keys(matchingStores).length})</h3>
 		    {Object.keys(matchingStores).map((storeID) => (
-			    <div class="shop-card" id={"store-" + storeID}>
-				<img class="shop-image" src={matchingStores[storeID].pictureURL} alt="Shop image"></img>
-				<div class="shop-content">
-				    <div class="shop-info left">
-				        <h3 class="shop-name">{matchingStores[storeID].storeName}</h3>
-				        <p class="shop-description">{matchingStores[storeID].description}</p>
+			    <div key={storeID} className="shop-card" id={"store-" + storeID}>
+				<img className="shop-image" src={matchingStores[storeID].pictureURL} alt="Shop image"></img>
+				<div className="shop-content">
+				    <div className="shop-info left">
+				        <h3 className="shop-name">{matchingStores[storeID].storeName}</h3>
+				        <p className="shop-description">{matchingStores[storeID].description}</p>
 					<p>{matchingStores[storeID].website}</p>
 				    </div>
-				    <div class="shop-info">
+				    <div className="shop-info">
 				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
 					<p>{matchingStores[storeID].address}</p>
 				        <p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(matchingStores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
-				        {expandedHours == storeID && <div class="expanded-hours">
+				        {expandedHours == storeID && <div className="expanded-hours">
 						{Array(7).keys().map((dayIndex) => (
-				        		<p>{printHours(matchingStores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
+				        		<p key={dayIndex}>{printHours(matchingStores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
 				        	))}
 				        </div>}
 				    </div>
 				</div>
-				<button class="small-button" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
-				<div class="inventory-panel">
+				<button className="small-button" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
+				<div className="inventory-panel">
 				{(inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) ? "" : (Object.keys(inventories[storeID]).map((itemID) => (
-				<div class="item-card">
-					<div class="item-info left">
+				<div key={itemID} className="item-card">
+					<div className="item-info left">
 					<p>{inventories[storeID][itemID].itemName}</p>
 					</div>
-					<div class="item-info">
+					<div className="item-info">
 					{(inventories[storeID][itemID].price != 0) ? (<p> €{inventories[storeID][itemID].price} </p>) : ""}
 					</div>
 				</div>
@@ -493,99 +493,100 @@ function App() {
 		</div>
 	    </div>
 
-	    <aside id="advanced-filters" class="advanced-filters">
-		<button class="close-filters-btn" id="close-filters-btn">×</button>
+	    {/*
+	    <aside id="advanced-filters" className="advanced-filters">
+		<button className="close-filters-btn" id="close-filters-btn">×</button>
 		
-		<div class="keywords-section">
-		    <label class="filter-label-text">Keywords</label>
-		    <div class="keyword-tags">
-		        <span class="keyword-tag">
+		<div className="keywords-section">
+		    <label className="filter-label-text">Keywords</label>
+		    <div className="keyword-tags">
+		        <span className="keyword-tag">
 		            Organic
-		            <button class="tag-remove">×</button>
+		            <button className="tag-remove">×</button>
 		        </span>
-		        <span class="keyword-tag">
+		        <span className="keyword-tag">
 		            Pork
-		            <button class="tag-remove">×</button>
+		            <button className="tag-remove">×</button>
 		        </span>
-		        <span class="keyword-tag">
+		        <span className="keyword-tag">
 		            Budget
-		            <button class="tag-remove">×</button>
+		            <button className="tag-remove">×</button>
 		        </span>
 		    </div>
 		</div>
 
-		<div class="checkbox-section">
-		    <label class="checkbox-item">
+		<div className="checkbox-section">
+		    <label className="checkbox-item">
 		        <input type="checkbox" checked></input>
-		        <div class="checkbox-content">
-		            <span class="checkbox-label">Open</span>
-		            <span class="checkbox-description">Only shows stores that are currently open</span>
+		        <div className="checkbox-content">
+		            <span className="checkbox-label">Open</span>
+		            <span className="checkbox-description">Only shows stores that are currently open</span>
 		        </div>
 		    </label>
 
-		    <label class="checkbox-item">
+		    <label className="checkbox-item">
 		        <input type="checkbox" checked></input>
-		        <div class="checkbox-content">
-		            <span class="checkbox-label">Transportation</span>
-		            <span class="checkbox-description">Expands search to include shops further away</span>
+		        <div className="checkbox-content">
+		            <span className="checkbox-label">Transportation</span>
+		            <span className="checkbox-description">Expands search to include shops further away</span>
 		        </div>
 		    </label>
 
-		    <label class="checkbox-item">
+		    <label className="checkbox-item">
 		        <input type="checkbox" checked></input>
-		        <div class="checkbox-content">
-		            <span class="checkbox-label">Don't close soon</span>
-		            <span class="checkbox-description">Removes stores that close less than 30 min from now</span>
+		        <div className="checkbox-content">
+		            <span className="checkbox-label">Don't close soon</span>
+		            <span className="checkbox-description">Removes stores that close less than 30 min from now</span>
 		        </div>
 		    </label>
 		</div>
 
-		<div class="slider-section">
-		    <div class="slider-header">
-		        <label class="filter-label-text">Price Range</label>
-		        <span class="slider-value">€10-100</span>
+		<div className="slider-section">
+		    <div className="slider-header">
+		        <label className="filter-label-text">Price Range</label>
+		        <span className="slider-value">€10-100</span>
 		    </div>
-		    <input type="range" class="price-slider" min="10" max="100" value="50"></input>
+		    <input type="range" className="price-slider" min="10" max="100" value="50"></input>
 		</div>
 
-		<div class="checkbox-section">
-		    <label class="filter-label-text">inventory</label>
+		<div className="checkbox-section">
+		    <label className="filter-label-text">inventory</label>
 		    
-		    <label class="checkbox-item-simple">
-		        <input type="checkbox" checked></input>
+		    <label className="checkbox-item-simple">
+		        <input type="checkbox"></input>
 		        <span>Clothing</span>
 		    </label>
 
-		    <label class="checkbox-item-simple">
-		        <input type="checkbox" checked></input>
+		    <label className="checkbox-item-simple">
+		        <input type="checkbox"></input>
 		        <span>Butcher</span>
 		    </label>
 
-		    <label class="checkbox-item-simple">
-		        <input type="checkbox" checked></input>
+		    <label className="checkbox-item-simple">
+		        <input type="checkbox"></input>
 		        <span>Produce</span>
 		    </label>
 		</div>
 
-		<div class="checkbox-section">
-		    <label class="filter-label-text">Distance</label>
+		<div className="checkbox-section">
+		    <label className="filter-label-text">Distance</label>
 		    
-		    <label class="checkbox-item-simple">
-		        <input type="checkbox" checked></input>
+		    <label className="checkbox-item-simple">
+		        <input type="checkbox"></input>
 		        <span>Nearest</span>
 		    </label>
 
-		    <label class="checkbox-item-simple">
-		        <input type="checkbox" checked></input>
+		    <label className="checkbox-item-simple">
+		        <input type="checkbox"></input>
 		        <span>3Km</span>
 		    </label>
 
-		    <label class="checkbox-item-simple">
-		        <input type="checkbox" checked></input>
+		    <label className="checkbox-item-simple">
+		        <input type="checkbox"></input>
 		        <span>5Km</span>
 		    </label>
 		</div>
-	    </aside>
+	    </aside>*/}
 
 	</>
 	)
