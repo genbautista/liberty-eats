@@ -12,6 +12,7 @@ function App() {
 	const [matchingStores, setMatchingStores] = useState({})
 	const [allStores, setAllStores] = useState({})
 	const [allCategories, setAllCategories] = useState({})
+	const [allTypes, setAllTypes] = useState({})
 	const [addingItem, setAddingItem] = useState(false)
 	const [resultPopupText, setResultPopupText] = useState("")
 	const [locationOn, setLocationOn] = useState(false)
@@ -21,12 +22,15 @@ function App() {
 	const [expandedHours, setExpandedHours] = useState(-1)
 	const [mapPos, setMapPos] = useState([53.3415,-6.2777]) //lat, long
 	const [mapZoom, setMapZoom] = useState(15)
+	const [selectedCategories, setSelectedCategories] = useState([])
+	const [selectedTypes, setSelectedTypes] = useState([])
 	const markerRefs = useRef([]);
 	const searchInput = useRef(0);
 	const map = useRef(null);
 
 	const fetchAllCategories = () => {
 		fetch(URL + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
+		fetch(URL + "/types").then(res => res.json()).then((json) => setAllTypes(json))
 	}
 	const fetchAllStores = () => {
 		fetch(URL + "/stores").then(res => res.json()).then((json) => setAllStores(json))
@@ -52,15 +56,24 @@ function App() {
 			setSearchResultsVisible(false)
 		}
 		if (event.key == "Enter") {
-			searchItem()
+			searchItem(event, true)
 		}
 	}
 	
-	const searchItem = (event) => {
+	const searchItem = (event, showResults) => {
 		let query = searchInput.current.value
 		
-		setTimeout(() => setSearchResultsVisible(true), 100)
+		if (showResults) {
+			setTimeout(() => setSearchResultsVisible(true), 100)
+		}
 		query = query.toLowerCase().trim()
+		
+		for (let x of selectedCategories) {
+			query += "&categoryID=" + x
+		}
+		for (let x of selectedTypes) {
+			query += "&typeID=" + x
+		}
 			
 		//Find stores with matching names
 		fetch(URL + "/stores?store=" + query).then((res) => res.json()).then((json) => {
@@ -211,6 +224,38 @@ function App() {
 		document.getElementById("store-" + storeID).scrollIntoView({behavior: "smooth", block:"center"})
 	}
 	
+	const toggleCategory = (categoryID) => {
+		let wasFound = false
+		let categoryLis = []
+		for (let i in selectedCategories) {
+			if (selectedCategories[i] === categoryID) {
+				wasFound = true
+			} else {
+				categoryLis.push(selectedCategories[i])
+			}
+		}
+		if (!wasFound) {
+			categoryLis.push(categoryID)
+		}
+		setSelectedCategories(categoryLis)
+	}
+	
+	const toggleType = (typeID) => {
+		let wasFound = false
+		let typeLis = []
+		for (let i in selectedTypes) {
+			if (selectedTypes[i] === typeID) {
+				wasFound = true
+			} else {
+				typeLis.push(selectedTypes[i])
+			}
+		}
+		if (!wasFound) {
+			typeLis.push(typeID)
+		}
+		setSelectedTypes(typeLis)
+	}
+	
 	//fetch initial data only when starting (remove the [] to do on every render, or add a variable to do so when that variable changes)
 	useEffect(() => {
 		fetchStores();
@@ -219,6 +264,10 @@ function App() {
 		fetchAllCategories();
 		window.addEventListener("click",handleGlobalClick)
 	}, []);
+	
+	useEffect(() => {
+		searchItem(undefined, false)
+	}, [selectedCategories, selectedTypes])
 	
 	const RecenterAutomatically = ({lat,lng,zoom}) => {
 	 const map = useMap();
@@ -246,9 +295,11 @@ function App() {
 		/>
 
 	    { /* Dropdown toggle button for advanced filters */ }
+	    {/*
 	    <button id="toggle-filters-btn" class="toggle-filters-btn big-button">
 		<span>⚙️ Filters</span>
 	    </button>
+	    */}
 	    
 	    <button id="add-item" class="big-button" onClick={() => {setAddingItem(true)}}>Add Item</button>
 	    { (resultPopupText != "")&& <div id="result-popup">
@@ -329,7 +380,7 @@ function App() {
 			onChange={searchHandler}
 			ref={searchInput}
 		    ></input>
-		    <button class="search-button" onClick={searchItem}>🔍</button>
+		    <button class="search-button" onClick={(event) => searchItem(event, true)}>🔍</button>
 		    {searchResultsVisible && <div class="search-results-dropdown active" id="search-results-dropdown">
 		    	{(Object.keys(matchingStores).length === 0) && <div class="no-results">
 				No stores found with that item
@@ -349,81 +400,24 @@ function App() {
 		 <section class="filter-section">
 		    <h3 class="section-header">Categories</h3>
 		    
-		    <button class="filter-item category-filter" data-category="Produce">
-		        <span class="filter-icon">🍎</span>
-		        <span class="filter-label">Produce</span>
+		    {Object.keys(allCategories).map((categoryID) => (
+		    <button class={"filter-item type-filter" + ((selectedCategories.includes(categoryID)) ? " filter-item-selected" : "")} data-category={allCategories[categoryID].categoryName} onClick={() => toggleCategory(categoryID)}>
+		        <span class="filter-icon">{allCategories[categoryID].categorySymbol}</span>
+		        <span class="filter-label">{allCategories[categoryID].categoryName}</span>
 		    </button>
-
-		    <button class="filter-item category-filter" data-category="Dairy">
-		        <span class="filter-icon">🥛</span>
-		        <span class="filter-label">Dairy</span>
-		    </button>
-
-		    <button class="filter-item category-filter" data-category="Meat">
-		        <span class="filter-icon">🥩</span>
-		        <span class="filter-label">Meat</span>
-		    </button>
-
-		    <button class="filter-item category-filter">
-		        <span class="filter-icon">👕</span>
-		        <span class="filter-label">Clothing</span>
-		    </button>
+		    ))}
 		</section>
 
 		<section class="filter-section">
 		    <h3 class="section-header">Store Types</h3>
 		    
-		    <button class="filter-item type-filter" data-type="Grocery">
-		        <span class="filter-icon">🛒</span>
-		        <span class="filter-label">Grocery</span>
+		    {Object.keys(allTypes).map((typeID) => (
+		    <button key={typeID} class={"filter-item type-filter" + ((selectedTypes.includes(typeID)) ? " filter-item-selected" : "")} data-category={allTypes[typeID].typeName} onClick={() => toggleType(typeID)}>
+		        <span class="filter-icon">{allTypes[typeID].typeSymbol}</span>
+		        <span class="filter-label">{allTypes[typeID].typeName}</span>
 		    </button>
-
-		    <button class="filter-item type-filter" data-type="Restaurant">
-		        <span class="filter-icon">🍽️</span>
-		        <span class="filter-label">Restaurant</span>
-		    </button>
-
-		    <button class="filter-item type-filter" data-type="Pub">
-		        <span class="filter-icon">🍺</span>
-		        <span class="filter-label">Pub</span>
-		    </button>
-
-		    <button class="filter-item type-filter" data-type="Hardware">
-		        <span class="filter-icon">🔨</span>
-		        <span class="filter-label">Hardware</span>
-		    </button>
-
-		    <button class="filter-item type-filter" data-type="Home Goods">
-		        <span class="filter-icon">🏠</span>
-		        <span class="filter-label">Home Goods</span>
-		    </button>
-
+		    ))}
 		</section>
-		
-		<section class="filter-section">
-		    <h3 class="section-header">Distance</h3>
-		    
-		    <button class="filter-item distance-filter active" data-distance="all">
-		        <span class="filter-icon">📍</span>
-		        <span class="filter-label">All</span>
-		    </button>
-
-		    <button class="filter-item distance-filter" data-distance="1">
-		        <span class="filter-icon">📍</span>
-		        <span class="filter-label">1km</span>
-		    </button>
-
-		    <button class="filter-item distance-filter" data-distance="2">
-		        <span class="filter-icon">📍</span>
-		        <span class="filter-label">2km</span>
-		    </button>
-
-		    <button class="filter-item distance-filter" data-distance="5">
-		        <span class="filter-icon">📍</span>
-		        <span class="filter-label">5km</span>
-		    </button>
-		</section>
-
 
 		{ /* Results section with shop cards */ }
 		<div class="results-section">

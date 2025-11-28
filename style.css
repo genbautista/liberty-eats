@@ -292,6 +292,8 @@ nav {
 
 .filter-item-selected {
     color: #0088FF;
+    background-color: rgba(120, 120, 128, 0.16);
+    border-radius: 6.25rem;
     font-weight: 590;
 }
 
@@ -853,5 +855,4 @@ nav {
  .leaflet-marker-icon.highlighted {
     filter: hue-rotate(120deg) brightness(1.2);
     z-index: 1000 !important;
-}
 }
