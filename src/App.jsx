@@ -457,7 +457,7 @@ function App() {
 		<div className="results-section">
 		    <h3 className="results-header">Results ({Object.keys(matchingStores).length})</h3>
 		    {Object.keys(matchingStores).map((storeID) => (
-			    <div key={storeID} className="shop-card" id={"store-" + storeID}>
+			    <div key={storeID} className="shop-card" id={"store-" + storeID} onClick={() => focusStore(storeID)}>
 				<img className="shop-image" src={matchingStores[storeID].pictureURL} alt="Shop image"></img>
 				<div className="shop-content">
 				    <div className="shop-info left">
