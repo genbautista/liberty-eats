@@ -105,6 +105,8 @@ function App() {
 		
 		let {query, filters} = buildQuery()
 			
+		setInventories({})
+			
 		//Find stores with matching names
 		fetch(URL + "/stores?store=" + query + filters).then((res) => res.json()).then((json) => {
 			let list = {}
