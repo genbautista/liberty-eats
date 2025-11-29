@@ -340,24 +340,25 @@ function App() {
 
 		let string = ""
 		let color = ""
-		if (confidence > 0.9) {
+		if (confidence > 0.8) {
 			string = "Very likely still there."
 			color = "green"
-		} else if (confidence > 0.7) {
+		} else if (confidence > 0.6) {
 			string = "Likely still there."
 			color = "green"
-		} else if (confidence > 0.5) {
+		} else if (confidence > 0.4) {
 			string = "May still be there."
 			color = "yellow"
-		} else if (confidence > 0.3) {
+		} else if (confidence > 0.2) {
 			string = "May not be there."
-			color = "yellow"
+			color = "red"
 		} else {
 			string = "Likely no longer there."
 			color = "red"
 		}
 		
 		const explanation = "In last two weeks, item was seen by " + textSightings[1] + " and reported absent by " + textSightings[0] + "."
+		string += " " + confidence
 		return (
 			<div>
 			<div className="tooltip-container">
@@ -535,26 +536,28 @@ function App() {
 		<div className="results-section">
 		    <h3 className="results-header">Results ({Object.keys(matchingStores).length})</h3>
 		    {Object.keys(matchingStores).map((storeID) => (
-			    <div key={storeID} className="shop-card" id={"store-" + storeID}>
-				<img className="shop-image" src={matchingStores[storeID].pictureURL} alt="Shop image"></img>
-				<div className="shop-content">
-				    <div className="shop-info left">
-				        <h3 className="shop-name">{matchingStores[storeID].storeName}</h3>
-				        <p className="shop-description">{matchingStores[storeID].description}</p>
-					<p>{matchingStores[storeID].website}</p>
-				    </div>
-				    <div className="shop-info">
-				        {locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
-					<p>{matchingStores[storeID].address}</p>
-				        <p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(matchingStores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
-				        {expandedHours == storeID && <div className="expanded-hours">
-						{Array(7).keys().map((dayIndex) => (
-				        		<p key={dayIndex}>{printHours(matchingStores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
-				        	))}
-				        </div>}
-				    </div>
+		    	<div className="shop-encloser">
+				    <div key={storeID} className="shop-card" id={"store-" + storeID}>
+					<img className="shop-image" src={matchingStores[storeID].pictureURL} alt="Shop image"></img>
+					<div className="shop-content">
+					    <div className="shop-info left">
+						<h3 className="shop-name">{matchingStores[storeID].storeName}</h3>
+						<p className="shop-description">{matchingStores[storeID].description}</p>
+						<p>{matchingStores[storeID].website}</p>
+					    </div>
+					    <div className="shop-info">
+						{locationOn && <p><b>{computeDistance(matchingStores[storeID].latitude, matchingStores[storeID].longitude)} km away</b></p>}
+						<p>{matchingStores[storeID].address}</p>
+						<p onClick={() => {toggleExpandedHours(storeID)}}><b>{printHours(matchingStores[storeID].hours[getWeekday()])} ({DAYS_NAMES[getWeekday()].substr(0,3)}) v</b></p>
+						{expandedHours == storeID && <div className="expanded-hours">
+							{Array(7).keys().map((dayIndex) => (
+								<p key={dayIndex}>{printHours(matchingStores[storeID].hours[dayIndex])} ({DAYS_NAMES[dayIndex].substr(0,3)})</p>
+							))}
+						</div>}
+					    </div>
+					</div>
+					<button className="small-button" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
 				</div>
-				<button className="small-button" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
 				<div className="inventory-panel">
 				{(inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) ? "" : (Object.keys(inventories[storeID]).map((itemID) => (
 				<div key={itemID} className="item-card">
@@ -572,10 +575,9 @@ function App() {
 						</p>
 					</div>
 				</div>
-				))
-				)}
+				)))}
 				</div>
-			    </div>
+			</div>
 		    ))}
 		</div>
 	    </div>

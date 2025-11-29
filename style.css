@@ -499,7 +499,9 @@ nav {
 }
 
 .item-card p {
-  font-size: 1rem;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    margin: 0;
 }
 
 .shop-card b {
