@@ -5,7 +5,6 @@
 //All variables need to be through the useState functionality in order to facilitate this
 
 import { useEffect, useState, useRef } from 'react'
-import './App.css'
 import { MapContainer, Marker, Popup as Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet";
 
@@ -364,7 +363,6 @@ function App() {
 		}
 		
 		const explanation = "In last two weeks, item was seen by " + textSightings[1] + " and reported absent by " + textSightings[0] + "."
-		string += " " + confidence
 		return (
 			<div>
 			<div className="tooltip-container">
@@ -397,13 +395,13 @@ function App() {
 	}
 
 
-	const userIcon = new L.Icon({iconUrl: "https://github.com/genbautista/liberty-eats/blob/main/src/assets/user.png", iconSize: [40,40]})
+	const userIcon = new L.Icon({iconUrl: "https://github.com/genbautista/liberty-eats/blob/main/src/assets/user.png?raw=true", iconSize: [40,40]})
 
 	/* HTML GOES BELOW */
 	return (
 	<>
 		<img 
-		src="https://github.com/genbautista/liberty-eats/blob/main/src/assets/LibertiesShopsLogo.png"
+		src="https://github.com/genbautista/liberty-eats/blob/main/src/assets/LibertiesShopsLogo.png?raw=true"
 		class="navbar-item"
 		style={{
 			width: "12rem",
