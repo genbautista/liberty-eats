@@ -1,5 +1,10 @@
+/* Main codebase for the front page, including both JS and HTML structures, both in React */
+//Look for bookmark "HTML GOES BELOW" for where HTML gets written
+//All JS functions go in the App() above that bookmark
+//JS functions can be run in the HTML by enclosing them in {}. If the output changes, HTML will automatically change with it--that's the React component.
+//All variables need to be through the useState functionality in order to facilitate this
+
 import { useEffect, useState, useRef } from 'react'
-import './App.css'
 import { MapContainer, Marker, Popup as Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet";
 
@@ -358,7 +363,6 @@ function App() {
 		}
 		
 		const explanation = "In last two weeks, item was seen by " + textSightings[1] + " and reported absent by " + textSightings[0] + "."
-		string += " " + confidence
 		return (
 			<div>
 			<div className="tooltip-container">
@@ -391,13 +395,14 @@ function App() {
 	}
 
 
-	const userIcon = new L.Icon({iconUrl: "./src/assets/user.png", iconSize: [40,40]})
+	const userIcon = new L.Icon({iconUrl: "https://github.com/genbautista/liberty-eats/blob/main/src/assets/user.png?raw=true", iconSize: [40,40]})
 
+	/* HTML GOES BELOW */
 	return (
 	<>
 		<img 
-		src="./src/assets/LibertiesShopsLogo.png"
-		className="navbar-item"
+		src="https://github.com/genbautista/liberty-eats/blob/main/src/assets/LibertiesShopsLogo.png?raw=true"
+		class="navbar-item"
 		style={{
 			width: "12rem",
 			height: "auto",
