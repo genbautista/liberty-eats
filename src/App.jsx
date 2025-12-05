@@ -8,7 +8,6 @@ import { useEffect, useState, useRef } from 'react'
 import { MapContainer, Marker, Popup as Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet";
 import mapPin from "./assets/mapPin.svg"
-<ass></ass>
 
 const URL = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
 //const URL = "http://localhost:8787" //testing URL
