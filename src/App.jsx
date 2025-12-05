@@ -7,6 +7,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { MapContainer, Marker, Popup as Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet";
+import mapPin from "./assets/mapPin.svg"
 
 const URL = "https://rest-liberties-shops.libertiesshops.workers.dev" //live DB
 //const URL = "http://localhost:8787" //testing URL
@@ -396,7 +397,12 @@ function App() {
 
 
 	const userIcon = new L.Icon({iconUrl: "https://github.com/genbautista/liberty-eats/blob/main/src/assets/user.png?raw=true", iconSize: [40,40]})
-
+	const storeIcon = new L.Icon({
+		iconUrl: mapPin,
+		iconSize: [36, 56],      
+		iconAnchor: [18, 55],   
+		popupAnchor: [0, -50]
+	});
 	/* HTML GOES BELOW */
 	return (
 	<>
@@ -471,7 +477,7 @@ function App() {
 			</Marker>
 			}
 		    	{Object.keys(matchingStores).map((storeID) => (
-					<Marker key={storeID} position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} eventHandlers={{ click: () => {setScrollPosition(storeID)}}} ref={(element) => markerRefs.current[storeID] = element}>
+					<Marker key={storeID} position={[matchingStores[storeID].latitude, matchingStores[storeID].longitude]} icon={storeIcon} eventHandlers={{ click: () => {setScrollPosition(storeID)}}} ref={(element) => markerRefs.current[storeID] = element}>
 						<Popup>
 						  {matchingStores[storeID].storeName}
 						</Popup>
@@ -561,7 +567,7 @@ function App() {
 						</div>}
 					    </div>
 					</div>
-					<button className="small-button" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
+					<button className="small-button-inv" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
 				</div>
 				<div className="inventory-panel">
 				{(inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) ? "" : (Object.keys(inventories[storeID]).map((itemID) => (
@@ -575,8 +581,8 @@ function App() {
 						<p>{(inventories[storeID][itemID].price != 0) ? ( "€" + inventories[storeID][itemID].price ) : "-"}</p>
 						<p className="little-text">Still there?</p>
 						<p>
-							<button className="small-button" onClick={() => reportSeen(itemID, 1)}>👍</button>
-							<button className="small-button" onClick={() => reportSeen(itemID, 0)}>👎</button>
+							<button className="small-button-up" onClick={() => reportSeen(itemID, 1)}>👍</button>
+							<button className="small-button-down" onClick={() => reportSeen(itemID, 0)}>👎</button>
 						</p>
 					</div>
 				</div>

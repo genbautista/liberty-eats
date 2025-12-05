@@ -110,13 +110,46 @@ button {
     transition: all 0.3s ease;
 }
 
-.small-button {
+.small-button-down {
     z-index: 20;
     padding: 0.5rem 0.5rem;
     background: white;
     border: 0.0625rem solid #D9D9D9;
     border-radius: 0.5rem;
     color: #1E1E1E;
+    background-color: #d55a4b;
+    font-size: 0.8rem;
+    font-family: system-ui;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0rem 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.small-button-up {
+    z-index: 20;
+    padding: 0.5rem 0.5rem;
+    background: white;
+    border: 0.0625rem solid #D9D9D9;
+    border-radius: 0.5rem;
+    color: #1E1E1E;
+    background-color: #66822a;
+    font-size: 0.8rem;
+    font-family: system-ui;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0rem 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.small-button-inv {
+    z-index: 20;
+    padding: 0.5rem 0.5rem;
+    background: white;
+    border: 0.0625rem solid #D9D9D9;
+    border-radius: 0.5rem;
+    color: #D9D9D9;
+    background-color: #66822a;
     font-size: 0.8rem;
     font-family: system-ui;
     font-weight: 600;
