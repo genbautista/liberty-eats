@@ -35,6 +35,9 @@ function App() {
 	const markerRefs = useRef([]);
 	const searchInput = useRef(0);
 	const map = useRef(null);
+	const [inventoryPages, setInventoryPages] = useState({});
+	const [inventorySearch, setInventorySearch] = useState({});
+
 	
 	const fetchAllCategories = () => {
 		fetch(URL + "/categories").then(res => res.json()).then((json) => setAllCategories(json))
@@ -67,10 +70,11 @@ function App() {
 	}
 	
 	const toggleShowInventory = (storeID) => {
-		if (inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) {
-			fetchStoreInventory(storeID)
+		if (!inventories[storeID] || Object.keys(inventories[storeID]).length === 0) {
+			fetchStoreInventory(storeID);
+			setInventoryPages(prev => ({ ...prev, [storeID]: 0 }));
 		} else {
-			setInventory({},storeID)
+			setInventories(prev => ({ ...prev, [storeID]: {} }));
 		}
 	}
 
@@ -567,26 +571,111 @@ function App() {
 						</div>}
 					    </div>
 					</div>
-					<button className="small-button-inv" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "hide" : "show") + " inventory"}</button>
+					<button className="small-button-inv" onClick={() => toggleShowInventory(storeID)}>{((inventories[storeID] != undefined && Object.keys(inventories[storeID]).length > 0) ? "Hide" : "Show") + " Inventory"}</button>
 				</div>
-				<div className="inventory-panel">
-				{(inventories[storeID] == undefined || Object.keys(inventories[storeID]).length == 0) ? "" : (Object.keys(inventories[storeID]).map((itemID) => (
-				<div key={itemID} className="item-card">
-					<div className="item-info left">
-						<p><b>{inventories[storeID][itemID].itemName}</b></p>
-						{sightingsElement(inventories[storeID][itemID].sightings, itemID)}
-					</div>
-					
-					<div className="item-info">
-						<p>{(inventories[storeID][itemID].price != 0) ? ( "€" + inventories[storeID][itemID].price ) : "-"}</p>
-						<p className="little-text">Still there?</p>
-						<p>
-							<button className="small-button-up" onClick={() => reportSeen(itemID, 1)}>👍</button>
-							<button className="small-button-down" onClick={() => reportSeen(itemID, 0)}>👎</button>
-						</p>
-					</div>
-				</div>
-				)))}
+				<div className="inventory-panel" style={{ fontFamily: "system-ui" }}>
+					{inventories[storeID] && Object.keys(inventories[storeID]).length > 0 && (() => {
+						const ITEMS_PER_PAGE = 5;
+						const page = inventoryPages[storeID] || 0;
+						const search = inventorySearch?.[storeID]?.toLowerCase() || "";
+						const allItemIDs = Object.keys(inventories[storeID]);
+						const filteredIDs = allItemIDs.filter(itemID =>
+							inventories[storeID][itemID].itemName.toLowerCase().includes(search)
+						);
+						const totalPages = Math.ceil(filteredIDs.length / ITEMS_PER_PAGE);
+						const start = page * ITEMS_PER_PAGE;
+						const visibleIDs = filteredIDs.slice(start, start + ITEMS_PER_PAGE);
+						return (
+							<>
+								{/* SEARCH BAR */}
+								<input
+									type="text"
+									className="inventory-search"
+									style={{
+										width: "95%",
+										margin: "0.5rem auto",
+										padding: "6px 8px",
+										borderRadius: "6px",
+										border: "1px solid #ccc",
+										fontFamily: "system-ui"
+									}}
+									placeholder="Search items..."
+									value={inventorySearch?.[storeID] || ""}
+									onChange={(e) => {
+										setInventorySearch(prev => ({ ...prev, [storeID]: e.target.value }));
+										setInventoryPages(prev => ({ ...prev, [storeID]: 0 })); // reset page
+									}}
+								/>
+								{/* VISIBLE ITEMS */}
+								{visibleIDs.map((itemID) => (
+									<div key={itemID} className="item-card">
+										<div className="item-info left">
+											<p style={{ fontFamily: "system-ui", fontWeight: "500" }}>
+												{inventories[storeID][itemID].itemName}
+											</p>
+											{sightingsElement(inventories[storeID][itemID].sightings, itemID)}
+										</div>
+										<div className="item-info">
+											<p>
+												{inventories[storeID][itemID].price !== 0
+													? "€" + inventories[storeID][itemID].price
+													: "-"}
+											</p>
+											<p className="little-text">Still there?</p>
+											<p>
+												<button
+													className="small-button-up"
+													onClick={() => reportSeen(itemID, 1)}
+												>
+													👍
+												</button>
+												<button
+													className="small-button-down"
+													onClick={() => reportSeen(itemID, 0)}
+												>
+													👎
+												</button>
+											</p>
+										</div>
+									</div>
+								))}
+								{/* PAGINATION (only if more than one page) */}
+								{totalPages > 1 && (
+									<div className="pagination-controls" style={{ marginTop: "0.5rem" }}>
+										<button
+											className="small-button-inv"
+											disabled={page === 0}
+											onClick={() =>
+												setInventoryPages(prev => ({ ...prev, [storeID]: page - 1 }))
+											}
+										>
+											Previous
+										</button>
+										<span
+											className="page-indicator"
+											style={{
+												fontFamily: "system-ui",
+												fontSize: "0.9rem",
+												fontWeight: "500",
+												margin: "0 12px"
+											}}
+										>
+											Page {page + 1} / {totalPages}
+										</span>
+										<button
+											className="small-button-inv"
+											disabled={page + 1 >= totalPages}
+											onClick={() =>
+												setInventoryPages(prev => ({ ...prev, [storeID]: page + 1 }))
+											}
+										>
+											Next
+										</button>
+									</div>
+								)}
+							</>
+						);
+					})()}
 				</div>
 			</div>
 		    ))}
